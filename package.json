@@ -11,9 +11,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "chalk": "^4.1.0",
     "ramda": "^0.26.1",
     "ramda-adjunct": "^2.16.1",
-    "rot-js": "^2.0.3"
+    "rot-js": "^2.0.3",
+    "set-terminal-title": "^1.0.1"
   },
   "devDependencies": {
     "jest": "^24.7.1",
