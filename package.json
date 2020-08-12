@@ -6,7 +6,8 @@
   "scripts": {
     "build": "parcel build index.js --target node",
     "start": "npm run build && node dist",
-    "test": "jest"
+    "test": "jest",
+    "start:pixi-test": "parcel pixi-test/index.html"
   },
   "author": "",
   "license": "ISC",
@@ -14,12 +15,14 @@
     "chalk": "^4.1.0",
     "iohook": "^0.6.6",
     "keypress": "^0.2.1",
+    "pixi.js": "^5.3.3",
     "ramda": "^0.26.1",
     "ramda-adjunct": "^2.16.1",
     "rot-js": "^2.0.3",
     "set-terminal-title": "^1.0.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.11.1",
     "jest": "^24.7.1",
     "parcel-bundler": "^1.12.3"
   }
