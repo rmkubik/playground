@@ -12,6 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "chalk": "^4.1.0",
+    "iohook": "^0.6.6",
+    "keypress": "^0.2.1",
     "ramda": "^0.26.1",
     "ramda-adjunct": "^2.16.1",
     "rot-js": "^2.0.3",
