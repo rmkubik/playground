@@ -4,8 +4,7 @@
     [
       "transform-react-jsx",
       {
-        "pragma": "h",
-        "runtime": "classic"
+        "pragma": "h"
       }
     ]
   ]

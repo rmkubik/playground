@@ -1,0 +1,34 @@
+body {
+  background: black;
+  color: white;
+  font-family: Menlo, Courier, monospace;
+  padding: 20px;
+}
+
+p {
+  margin-top: 32px;
+}
+
+@keyframes flash {
+  from,
+  30% {
+    opacity: 1;
+  }
+
+  15% {
+    opacity: 0;
+  }
+}
+
+.flash {
+  animation-name: flash;
+}
+
+.animated {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+}
+
+.animated.infinite {
+  animation-iteration-count: infinite;
+}

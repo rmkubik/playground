@@ -1,7 +1,9 @@
 import { app } from "hyperapp";
 import h from "./hyperapp-jsx";
 import { onAnimationFrame } from "@hyperapp/events";
+
 import titleTxt from "./assets/title.txt";
+import "./main.scss";
 
 const AddTodo = (state) => ({
   ...state,
@@ -12,8 +14,6 @@ const NewValue = (state, event) => ({
   ...state,
   value: event.target.value,
 });
-
-console.log(titleTxt);
 
 const Todos = ({ todos = [], value }) => {
   return (
