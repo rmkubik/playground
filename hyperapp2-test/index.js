@@ -4,16 +4,6 @@ import h from "./hyperapp-jsx";
 import titleTxt from "./assets/title.txt";
 import "./main.scss";
 
-const AddTodo = (state) => ({
-  ...state,
-  todos: state.todos.concat(state.value),
-});
-
-const NewValue = (state, event) => ({
-  ...state,
-  value: event.target.value,
-});
-
 const onClick = (() => {
   const subFn = (dispatch, options) => {
     const onClickFn = (event) => {
@@ -23,6 +13,19 @@ const onClick = (() => {
     document.addEventListener("click", onClickFn);
 
     return () => document.removeEventListener("click", onClickFn);
+  };
+  return (action) => [subFn, { action }];
+})();
+
+const onKeyDown = (() => {
+  const subFn = (dispatch, options) => {
+    const onKeyDownFn = (event) => {
+      dispatch(options.action, event);
+    };
+
+    document.addEventListener("keydown", onKeyDownFn);
+
+    return () => document.removeEventListener("keydown", onKeyDownFn);
   };
   return (action) => [subFn, { action }];
 })();
@@ -49,5 +52,8 @@ app({
   init: { clicked: false },
   view: View,
   node: document.getElementById("app"),
-  subscriptions: (state) => [!state.clicked && onClick(Click)],
+  subscriptions: (state) => [
+    !state.clicked && onClick(Click),
+    !state.clicked && onKeyDown(Click),
+  ],
 });
