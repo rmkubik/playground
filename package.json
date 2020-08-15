@@ -7,12 +7,15 @@
     "build": "parcel build index.js --target node",
     "start": "npm run build && node dist",
     "test": "jest",
-    "start:pixi-test": "parcel pixi-test/index.html"
+    "start:pixi-test": "parcel pixi-test/index.html",
+    "start:hyperapp2-test": "parcel hyperapp2-test/index.html"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@hyperapp/events": "0.0.4",
     "chalk": "^4.1.0",
+    "hyperapp": "^2.0.8",
     "iohook": "^0.6.6",
     "keypress": "^0.2.1",
     "pixi.js": "^5.3.3",
@@ -23,8 +26,11 @@
   },
   "devDependencies": {
     "@babel/core": "^7.11.1",
+    "@babel/plugin-transform-react-jsx": "^7.10.4",
+    "@babel/preset-env": "^7.11.0",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
     "jest": "^24.7.1",
-    "parcel-bundler": "^1.12.3",
+    "parcel-bundler": "^1.12.4",
     "sass": "^1.26.10"
   }
 }
