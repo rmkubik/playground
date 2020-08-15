@@ -1,6 +1,5 @@
 import { app } from "hyperapp";
 import h from "./hyperapp-jsx";
-import { onAnimationFrame } from "@hyperapp/events";
 
 import titleTxt from "./assets/title.txt";
 import "./main.scss";
@@ -15,20 +14,40 @@ const NewValue = (state, event) => ({
   value: event.target.value,
 });
 
-const Todos = ({ todos = [], value }) => {
+const onClick = (() => {
+  const subFn = (dispatch, options) => {
+    const onClickFn = (event) => {
+      dispatch(options.action, event);
+    };
+
+    document.addEventListener("click", onClickFn);
+
+    return () => document.removeEventListener("click", onClickFn);
+  };
+  return (action) => [subFn, { action }];
+})();
+
+const Click = (state, event) => ({
+  ...state,
+  clicked: true,
+});
+
+const View = ({ clicked }) => {
   return (
     <main>
       <pre>{titleTxt}</pre>
       <p>
         Press any key to continue...{" "}
         <span class="flash animated infinite">|</span>
+        {clicked ? <p>clicked!</p> : ""}
       </p>
     </main>
   );
 };
 
 app({
-  init: { todos: [], value: "" },
-  view: Todos,
+  init: { clicked: false },
+  view: View,
   node: document.getElementById("app"),
+  subscriptions: (state) => [!state.clicked && onClick(Click)],
 });
