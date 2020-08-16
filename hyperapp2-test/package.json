@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "parcel index.html"
+    "start": "parcel index.html",
+    "build": "parcel build index.html",
+    "compress": "zip -r build.zip dist -x *.map dist/report.html && npm run showBundleSize",
+    "showBundleSize": "ls -lh build.zip | cut -d ' ' -f9"
   },
   "author": "",
   "license": "ISC",
@@ -14,10 +17,11 @@
     "@babel/preset-env": "^7.11.0",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "parcel-bundler": "^1.12.4",
+    "parcel-plugin-bundle-visualiser": "^1.2.0",
+    "parcel-plugin-clean-dist": "0.0.6",
     "parcel-plugin-text": "https://github.com/rmkubik/parcel-plugin-text.git"
   },
   "dependencies": {
-    "common-tags": "^1.8.0",
     "hyperapp": "^2.0.8"
   },
   "parcel-plugin-text": {
