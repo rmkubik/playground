@@ -42,7 +42,7 @@ const StartBattle = (state, event) => {
   };
 };
 
-const Sprite = ({ sheet, row, col, scale = 1 }) => {
+const Sprite = ({ sheet, row, col, color = "white", scale = 1 }) => {
   return (
     <div
       class="sprite"
@@ -53,13 +53,13 @@ const Sprite = ({ sheet, row, col, scale = 1 }) => {
     >
       <div
         style={{
-          background: `url(${sheet}) -${col * TILE_SIZE}px -${
-            row * TILE_SIZE
-          }px`,
           width: `${TILE_SIZE}px`,
           height: `${TILE_SIZE}px`,
           transform: `scale(${scale})`,
           transformOrigin: "top left",
+          backgroundColor: color,
+          webkitMaskImage: `url(${sheet})`,
+          webkitMaskPosition: `-${col * TILE_SIZE}px -${row * TILE_SIZE}px`,
         }}
       ></div>
     </div>
@@ -129,13 +129,25 @@ const Grid = ({ sheet, tiles }) => {
         gridTemplateColumns: `${TILE_SIZE * scale + 16}px `.repeat(
           tiles[0].length
         ),
+        gridTemplateRows: `${TILE_SIZE * scale + 16}px `.repeat(
+          tiles[0].length
+        ),
       }}
     >
       {[].concat(
         ...tiles.map((row, rowIndex) =>
-          row.map((col, colIndex) => (
-            <Sprite sheet={sheet} row={0} col={0} scale={scale} />
-          ))
+          row.map((tile, colIndex) =>
+            tile.icon ? (
+              <Sprite
+                sheet={sheet}
+                row={tile.icon[0]}
+                col={tile.icon[1]}
+                scale={scale}
+              />
+            ) : (
+              <div></div>
+            )
+          )
         )
       )}
     </div>
@@ -149,7 +161,7 @@ const Battle = () => {
         <Grid
           sheet={tileSheet}
           tiles={[
-            [1, 2, 3],
+            [{ icon: [0, 1] }, 2, 3],
             [4, 5, 6],
           ]}
         />
