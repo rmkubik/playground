@@ -60,3 +60,10 @@ p {
     padding-right: 2ch;
   }
 }
+
+.grid {
+  & > * {
+    border: 2px dashed white;
+    padding: 8px;
+  }
+}

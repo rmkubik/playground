@@ -2,7 +2,7 @@ import { app } from "hyperapp";
 import h from "./hyperapp-jsx";
 
 import titleTxt from "./assets/title.txt";
-import tiles from "./assets/tiles.png";
+import tileSheet from "./assets/tiles.png";
 
 import "./main.scss";
 
@@ -35,6 +35,13 @@ const Click = (state, event) => {
   }
 };
 
+const StartBattle = (state, event) => {
+  return {
+    ...state,
+    view: "battle",
+  };
+};
+
 const Sprite = ({ sheet, row, col, scale = 1 }) => {
   return (
     <div
@@ -63,7 +70,7 @@ const Server = ({ sheet, row, col, label, statusCode }) => {
   const color = Math.floor(statusCode / 100) === 2 ? "green" : "red";
 
   return (
-    <div class="server">
+    <div class="server" onclick={StartBattle}>
       <Sprite sheet={sheet} row={row} col={col} scale={3} />
       <p>{label}</p>
       <p class="statusCode">
@@ -94,14 +101,14 @@ const Map = () => {
       <p>--- The Cloud -----------------------[x]---</p>
       <div class="map">
         <Server
-          sheet={tiles}
+          sheet={tileSheet}
           row={0}
           col={0}
           label="127.0.0.1"
           statusCode={200}
         />
         <Server
-          sheet={tiles}
+          sheet={tileSheet}
           row={0}
           col={0}
           label="com.google"
@@ -112,9 +119,49 @@ const Map = () => {
   );
 };
 
+const Grid = ({ sheet, tiles }) => {
+  const scale = 3;
+  return (
+    <div
+      class="grid"
+      style={{
+        display: "grid",
+        gridTemplateColumns: `${TILE_SIZE * scale + 16}px `.repeat(
+          tiles[0].length
+        ),
+      }}
+    >
+      {[].concat(
+        ...tiles.map((row, rowIndex) =>
+          row.map((col, colIndex) => (
+            <Sprite sheet={sheet} row={0} col={0} scale={scale} />
+          ))
+        )
+      )}
+    </div>
+  );
+};
+
+const Battle = () => {
+  return (
+    <main>
+      <div class="battle-map">
+        <Grid
+          sheet={tileSheet}
+          tiles={[
+            [1, 2, 3],
+            [4, 5, 6],
+          ]}
+        />
+      </div>
+    </main>
+  );
+};
+
 const views = {
   main: Main,
   map: Map,
+  battle: Battle,
 };
 
 const App = ({ view = "main" }) => {
