@@ -4,31 +4,23 @@ import h from "./hyperapp-jsx";
 import titleTxt from "./assets/title.txt";
 import "./main.scss";
 
-const onClick = (() => {
-  const subFn = (dispatch, options) => {
-    const onClickFn = (event) => {
-      dispatch(options.action, event);
+const onDomEvent = (eventType) =>
+  (() => {
+    const subFn = (dispatch, options) => {
+      const onEventFn = (event) => {
+        dispatch(options.action, event);
+      };
+
+      document.addEventListener(eventType, onEventFn);
+
+      return () => document.removeEventListener(eventType, onEventFn);
     };
+    return (action) => [subFn, { action }];
+  })();
 
-    document.addEventListener("click", onClickFn);
+const onClick = onDomEvent("click");
 
-    return () => document.removeEventListener("click", onClickFn);
-  };
-  return (action) => [subFn, { action }];
-})();
-
-const onKeyDown = (() => {
-  const subFn = (dispatch, options) => {
-    const onKeyDownFn = (event) => {
-      dispatch(options.action, event);
-    };
-
-    document.addEventListener("keydown", onKeyDownFn);
-
-    return () => document.removeEventListener("keydown", onKeyDownFn);
-  };
-  return (action) => [subFn, { action }];
-})();
+const onKeyDown = onDomEvent("keydown");
 
 const Click = (state, event) => ({
   ...state,
