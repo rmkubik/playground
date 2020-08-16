@@ -22,30 +22,52 @@ const onClick = onDomEvent("click");
 
 const onKeyDown = onDomEvent("keydown");
 
-const Click = (state, event) => ({
-  ...state,
-  clicked: true,
-});
+const Click = (state, event) => {
+  if (state.view === "main") {
+    return {
+      ...state,
+      view: "map",
+    };
+  }
+};
 
-const View = ({ clicked }) => {
+const Main = () => {
   return (
     <main>
       <pre>{titleTxt}</pre>
       <p>
         Press any key to continue...{" "}
         <span class="flash animated infinite">|</span>
-        {clicked ? <p>clicked!</p> : ""}
       </p>
     </main>
   );
 };
 
+const Map = () => {
+  return (
+    <main>
+      <p>Map View</p>
+    </main>
+  );
+};
+
+const views = {
+  main: Main,
+  map: Map,
+};
+
+const App = ({ view = "main" }) => {
+  const CurrentView = views[view];
+
+  return <CurrentView />;
+};
+
 app({
-  init: { clicked: false },
-  view: View,
+  init: { view: "main" },
+  view: App,
   node: document.getElementById("app"),
   subscriptions: (state) => [
-    !state.clicked && onClick(Click),
-    !state.clicked && onKeyDown(Click),
+    state.view === "main" && onClick(Click),
+    state.view === "main" && onKeyDown(Click),
   ],
 });
