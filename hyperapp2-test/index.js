@@ -33,22 +33,6 @@ const Click = (state, event) => {
   }
 };
 
-// const SpriteContainer = styled.div`
-//   width: ${(props) => props.width * props.scale}px;
-//   height: ${(props) => props.height * props.scale}px;
-//   background-color: ${(props) => props.theme.palette[props.background]};
-// `;
-
-// const Sprite = styled.div`
-//   background: url(${(props) => props.sheet}) -${(props) =>
-//       props.col * props.width}px -${(props) => props.row * props.height}px;
-//   image-rendering: pixelated;
-//   width: ${(props) => props.width}px;
-//   height: ${(props) => props.height}px;
-//   transform: scale(${(props) => props.scale});
-//   transform-origin: top left;
-// `;
-
 const Sprite = ({ sheet, row, col, width, height, scale = 1 }) => {
   return (
     <div
