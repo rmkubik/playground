@@ -6,7 +6,7 @@
   "scripts": {
     "start": "parcel index.html",
     "build": "parcel build index.html",
-    "compress": "zip -r build.zip dist -x *.map dist/report.html && npm run showBundleSize",
+    "compress": "rm -f build.zip && zip -r build.zip dist -x *.map dist/report.html && npm run showBundleSize",
     "showBundleSize": "ls -lh build.zip | cut -d ' ' -f9"
   },
   "author": "",
