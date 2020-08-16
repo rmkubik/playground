@@ -6,6 +6,8 @@ import tiles from "./assets/tiles.png";
 
 import "./main.scss";
 
+const TILE_SIZE = 16;
+
 const onDomEvent = (eventType) =>
   (() => {
     const subFn = (dispatch, options) => {
@@ -33,23 +35,43 @@ const Click = (state, event) => {
   }
 };
 
-const Sprite = ({ sheet, row, col, width, height, scale = 1 }) => {
+const Sprite = ({ sheet, row, col, scale = 1 }) => {
   return (
     <div
+      class="sprite"
       style={{
-        width: `${width * scale}px`,
-        height: `${height * scale}px`,
+        width: `${TILE_SIZE * scale}px`,
+        height: `${TILE_SIZE * scale}px`,
       }}
     >
       <div
         style={{
-          background: `url(${sheet}) -${col * width}px -${row * height}px`,
-          width: `${width}px`,
-          height: `${height}px`,
+          background: `url(${sheet}) -${col * TILE_SIZE}px -${
+            row * TILE_SIZE
+          }px`,
+          width: `${TILE_SIZE}px`,
+          height: `${TILE_SIZE}px`,
           transform: `scale(${scale})`,
           transformOrigin: "top left",
         }}
       ></div>
+    </div>
+  );
+};
+
+const Server = ({ sheet, row, col, label, statusCode }) => {
+  const color = Math.floor(statusCode / 100) === 2 ? "green" : "red";
+
+  return (
+    <div class="server">
+      <Sprite sheet={sheet} row={row} col={col} scale={3} />
+      <p>{label}</p>
+      <p class="statusCode">
+        <span class="flash animated infinite" style={{ color }}>
+          ●{" "}
+        </span>{" "}
+        {statusCode}
+      </p>
     </div>
   );
 };
@@ -70,11 +92,13 @@ const Map = () => {
   return (
     <main>
       <p>Map View</p>
-      <Sprite sheet={tiles} row={0} col={0} width={16} height={16} scale={3} />
-      <p>127.0.0.1</p>
-      <p>
-        <span style={{ color: "green" }}>● </span> 200
-      </p>
+      <Server
+        sheet={tiles}
+        row={0}
+        col={0}
+        label="127.0.0.1"
+        statusCode={200}
+      />
     </main>
   );
 };

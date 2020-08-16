@@ -33,3 +33,21 @@ p {
 .animated.infinite {
   animation-iteration-count: infinite;
 }
+
+.server {
+  text-align: center;
+  width: fit-content;
+
+  p {
+    margin: 0;
+  }
+
+  .sprite {
+    margin: 0 auto;
+    margin-bottom: 1ch;
+  }
+
+  .statusCode {
+    padding-right: 2ch;
+  }
+}
