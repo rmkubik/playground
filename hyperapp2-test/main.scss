@@ -34,6 +34,15 @@ p {
   animation-iteration-count: infinite;
 }
 
+.map {
+  display: flex;
+  flex-direction: row;
+
+  & > .server {
+    margin-left: 4ch;
+  }
+}
+
 .server {
   text-align: center;
   width: fit-content;

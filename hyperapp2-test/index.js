@@ -91,14 +91,23 @@ const Main = () => {
 const Map = () => {
   return (
     <main>
-      <p>Map View</p>
-      <Server
-        sheet={tiles}
-        row={0}
-        col={0}
-        label="127.0.0.1"
-        statusCode={200}
-      />
+      <p>--- The Cloud -----------------------[x]---</p>
+      <div class="map">
+        <Server
+          sheet={tiles}
+          row={0}
+          col={0}
+          label="127.0.0.1"
+          statusCode={200}
+        />
+        <Server
+          sheet={tiles}
+          row={0}
+          col={0}
+          label="com.google"
+          statusCode={404}
+        />
+      </div>
     </main>
   );
 };
