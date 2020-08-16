@@ -114,6 +114,27 @@ const Map = () => {
           label="com.google"
           statusCode={404}
         />
+        <Server
+          sheet={tileSheet}
+          row={0}
+          col={0}
+          label="com.twitter"
+          statusCode={500}
+        />
+        <Server
+          sheet={tileSheet}
+          row={0}
+          col={0}
+          label="com.wikipedia"
+          statusCode={403}
+        />
+        <Server
+          sheet={tileSheet}
+          row={0}
+          col={0}
+          label="com.email"
+          statusCode={403}
+        />
       </div>
     </main>
   );
