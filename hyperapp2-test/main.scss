@@ -46,6 +46,8 @@ p {
 .server {
   text-align: center;
   width: fit-content;
+  cursor: pointer;
+  padding: 1ch;
 
   p {
     margin: 0;
@@ -58,6 +60,10 @@ p {
 
   .statusCode {
     padding-right: 2ch;
+  }
+
+  &:hover {
+    background-color: #223;
   }
 }
 
