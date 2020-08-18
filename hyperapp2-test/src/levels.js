@@ -8,11 +8,25 @@ const parse = (level) => {
     row.split(" ").map((char) => {
       switch (char) {
         case "s":
-          return { icon: [0, 1], bg: "#5454ff" };
+          return {
+            icon: [0, 1],
+            bg: "#5454ff",
+            name: "HACK.slsh",
+            size: [1, 4],
+            abilities: ["hack"],
+            moves: [3, 3],
+          };
         case "x":
-          return { icon: [0, 2], bg: "#ff5454" };
+          return {
+            icon: [0, 2],
+            bg: "#ff5454",
+            name: "GUARD",
+            size: [1, 3],
+            abilities: ["bash"],
+            moves: [2, 2],
+          };
         default:
-          return {};
+          return undefined;
       }
     })
   );

@@ -18,24 +18,28 @@ const SelectUnit = (state, location) => {
 
 const UnitInfo = ({ name, icon, size, abilities, moves }) => {
   const header = `--[ ${name} ]--`;
+  const HR = () => <p>{"-".repeat(header.length)}</p>;
+
   return (
     <div class="unit-info">
       <p>{header}</p>
       <Sprite sheet={tileSheet} icon={icon} scale={3} />
-      <p>{`Size: ${size[0]}/${size[1]}`}</p>
-      <p>{`Moves: ${moves[0]}/${moves[1]}`}</p>
-      <p>{"-".repeat(header.length)}</p>
+      <p>{`Size: ${size[0] || "?"}/${size[1] || "?"}`}</p>
+      <p>{`Moves: ${moves[0] || "?"}/${moves[1] || "?"}`}</p>
+      <HR />
       <ul>
         {abilities.map((ability) => (
           <li>{ability}</li>
         ))}
       </ul>
-      <p>{"-".repeat(header.length)}</p>
+      <HR />
     </div>
   );
 };
 
 const Battle = ({ battle: { tiles, selected } }) => {
+  const selectedInfo = tiles[selected[0]] && tiles[selected[0]][selected[1]];
+
   return (
     <main>
       <div class="battle-map">
@@ -47,11 +51,11 @@ const Battle = ({ battle: { tiles, selected } }) => {
         />
       </div>
       <UnitInfo
-        name={"HACK.slsh"}
-        icon={[0, 1]}
-        size={[3, 4]}
-        abilities={["hack"]}
-        moves={[2, 3]}
+        name={selectedInfo ? selectedInfo.name : "NONE SELECTED"}
+        icon={selectedInfo ? selectedInfo.icon : [0, 3]}
+        size={selectedInfo ? selectedInfo.size : []}
+        abilities={selectedInfo ? selectedInfo.abilities : []}
+        moves={selectedInfo ? selectedInfo.moves : []}
       />
     </main>
   );
