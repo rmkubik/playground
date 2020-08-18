@@ -47,11 +47,9 @@ app({
       selected: -1,
     },
     battle: {
-      tiles: [
-        [{ icon: [0, 1] }, 2, 3],
-        [4, 5, 6],
-      ],
+      tiles: [[]],
       selected: [],
+      units: [],
     },
   },
   view: App,

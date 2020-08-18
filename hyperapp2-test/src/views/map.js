@@ -15,6 +15,7 @@ const StartBattle = (state, index) => {
     battle: {
       ...state.battle,
       tiles: deepClone(state.map.servers[index].tiles),
+      units: deepClone(state.map.servers[index].units),
     },
     view: "battle",
   };
