@@ -9,7 +9,7 @@ const StartBattle = (state, event) => {
   };
 };
 
-const Sprite = ({ sheet, row, col, color = "white", scale = 1 }) => {
+const Sprite = ({ sheet, icon: [row, col], color = "white", scale = 1 }) => {
   return (
     <div
       class="sprite"
@@ -38,7 +38,7 @@ const Server = ({ sheet, row, col, label, statusCode }) => {
 
   return (
     <div class="server" onclick={StartBattle}>
-      <Sprite sheet={sheet} row={row} col={col} scale={3} />
+      <Sprite sheet={sheet} icon={[row, col]} scale={3} />
       <p>{label}</p>
       <p class="statusCode">
         <span class="flash animated infinite" style={{ color }}>
@@ -69,12 +69,7 @@ const Grid = ({ sheet, tiles }) => {
         ...tiles.map((row, rowIndex) =>
           row.map((tile, colIndex) =>
             tile.icon ? (
-              <Sprite
-                sheet={sheet}
-                row={tile.icon[0]}
-                col={tile.icon[1]}
-                scale={scale}
-              />
+              <Sprite sheet={sheet} icon={tile.icon} scale={scale} />
             ) : (
               <div></div>
             )

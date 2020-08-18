@@ -1,3 +1,6 @@
+$hover-color: #223;
+$selected-color: #224;
+
 body {
   background: black;
   color: white;
@@ -63,7 +66,7 @@ p {
   }
 
   &:hover {
-    background-color: #223;
+    background-color: $hover-color;
   }
 }
 
@@ -71,5 +74,33 @@ p {
   & > * {
     border: 2px dashed white;
     padding: 8px;
+  }
+}
+
+.unit-info {
+  width: fit-content;
+
+  p {
+    margin: 0;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    padding: 0.5ch 1ch;
+    cursor: pointer;
+  }
+
+  li:hover {
+    // width: fit-content;
+    background-color: $hover-color;
+  }
+
+  .selected {
+    background-color: $selected-color;
   }
 }
