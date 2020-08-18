@@ -23,17 +23,11 @@ const UnitInfo = ({ name, icon, size, abilities, moves }) => {
   );
 };
 
-const Battle = () => {
+const Battle = ({ battle: { tiles, selected } }) => {
   return (
     <main>
       <div class="battle-map">
-        <Grid
-          sheet={tileSheet}
-          tiles={[
-            [{ icon: [0, 1] }, 2, 3],
-            [4, 5, 6],
-          ]}
-        />
+        <Grid sheet={tileSheet} tiles={tiles} />
         <UnitInfo
           name={"HACK.slsh"}
           icon={[0, 1]}

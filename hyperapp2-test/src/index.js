@@ -32,14 +32,46 @@ const Click = (state, event) => {
   }
 };
 
-const App = ({ view = "main" }) => {
+const App = ({ view = "main", map, battle }) => {
   const CurrentView = views[view];
 
-  return <CurrentView />;
+  return <CurrentView map={map} battle={battle} />;
 };
 
 app({
-  init: { view: "main" },
+  init: {
+    view: "main",
+    map: {
+      servers: [
+        {
+          name: "127.0.0.1",
+          icon: [0, 0],
+          statusCode: 200,
+          tiles: [
+            [{ icon: [0, 1] }, 2, 3],
+            [4, 5, 6],
+          ],
+        },
+        {
+          name: "com.google",
+          icon: [0, 0],
+          statusCode: 404,
+          tiles: [
+            [1, 2, 3],
+            [4, { icon: [0, 1] }, 6],
+          ],
+        },
+      ],
+      selected: -1,
+    },
+    battle: {
+      tiles: [
+        [{ icon: [0, 1] }, 2, 3],
+        [4, 5, 6],
+      ],
+      selected: [],
+    },
+  },
   view: App,
   node: document.getElementById("app"),
   subscriptions: (state) => [

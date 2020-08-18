@@ -2,13 +2,6 @@ import h from "../hyperapp-jsx";
 
 const TILE_SIZE = 16;
 
-const StartBattle = (state, event) => {
-  return {
-    ...state,
-    view: "battle",
-  };
-};
-
 const Sprite = ({ sheet, icon: [row, col], color = "white", scale = 1 }) => {
   return (
     <div
@@ -33,12 +26,12 @@ const Sprite = ({ sheet, icon: [row, col], color = "white", scale = 1 }) => {
   );
 };
 
-const Server = ({ sheet, row, col, label, statusCode }) => {
+const Server = ({ sheet, icon, label, statusCode, onclick }) => {
   const color = Math.floor(statusCode / 100) === 2 ? "green" : "red";
 
   return (
-    <div class="server" onclick={StartBattle}>
-      <Sprite sheet={sheet} icon={[row, col]} scale={3} />
+    <div class="server" onclick={onclick}>
+      <Sprite sheet={sheet} icon={icon} scale={3} />
       <p>{label}</p>
       <p class="statusCode">
         <span class="flash animated infinite" style={{ color }}>
@@ -71,7 +64,13 @@ const Grid = ({ sheet, tiles }) => {
             tile.icon ? (
               <Sprite sheet={sheet} icon={tile.icon} scale={scale} />
             ) : (
-              <div></div>
+              <div
+                class="sprite"
+                style={{
+                  width: `${TILE_SIZE * scale}px`,
+                  height: `${TILE_SIZE * scale}px`,
+                }}
+              ></div>
             )
           )
         )
