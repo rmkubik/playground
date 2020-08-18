@@ -37,6 +37,19 @@ const Sprite = ({
           }}
         ></div>
       )}
+      {moveTarget && (
+        <div
+          style={{
+            width: `${TILE_SIZE}px`,
+            height: `${TILE_SIZE}px`,
+            transform: `scale(${scale})`,
+            transformOrigin: "top left",
+            backgroundColor: "cyan",
+            webkitMaskImage: `url(${sheet})`,
+            webkitMaskPosition: `-${4 * TILE_SIZE}px -${0 * TILE_SIZE}px`,
+          }}
+        ></div>
+      )}
     </div>
   );
 };
