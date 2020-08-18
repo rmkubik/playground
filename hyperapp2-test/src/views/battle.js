@@ -35,7 +35,7 @@ const SelectAbility = (state, index) => {
   };
 };
 
-const DeselectAbility = (state, index) => {
+const DeselectAbility = (state) => {
   return {
     ...state,
     battle: {
@@ -47,7 +47,7 @@ const DeselectAbility = (state, index) => {
 
 const ClickAbility = (state, index) => {
   if (state.battle.selectedAction === index) {
-    return DeselectAbility(state, index);
+    return DeselectAbility(state);
   } else {
     return SelectAbility(state, index);
   }
@@ -63,7 +63,7 @@ const SelectUnit = (state, location) => {
   };
 };
 
-const DeselectUnit = (state, location) => {
+const DeselectUnit = (state) => {
   return {
     ...state,
     battle: {
@@ -74,13 +74,15 @@ const DeselectUnit = (state, location) => {
 };
 
 const ClickTile = (state, location) => {
+  const deselectedAbilityState = DeselectAbility(state);
+
   if (
     state.battle.selected[0] === location[0] &&
     state.battle.selected[1] === location[1]
   ) {
-    return DeselectUnit(state, location);
+    return DeselectUnit(deselectedAbilityState);
   } else {
-    return SelectUnit(state, location);
+    return SelectUnit(deselectedAbilityState, location);
   }
 };
 
@@ -159,7 +161,8 @@ const Battle = ({
 
               return {
                 ...tile,
-                moveTarget: isNeighborSelected,
+                moveTarget: isNeighborSelected && selectedAction === -1,
+                attackTarget: isNeighborSelected && selectedAction !== -1,
               };
             })
           )}

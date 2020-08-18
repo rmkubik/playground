@@ -11,12 +11,13 @@ const Sprite = ({
   onclick,
   selected,
   moveTarget,
+  attackTarget,
 }) => {
   return (
     <div
       class={`sprite${selected ? " selected" : ""}${
         moveTarget ? " move-target" : ""
-      }`}
+      }${attackTarget ? " attack-target" : ""}`}
       style={{
         width: `${TILE_SIZE * scale}px`,
         height: `${TILE_SIZE * scale}px`,
@@ -47,6 +48,19 @@ const Sprite = ({
             backgroundColor: "cyan",
             webkitMaskImage: `url(${sheet})`,
             webkitMaskPosition: `-${4 * TILE_SIZE}px -${0 * TILE_SIZE}px`,
+          }}
+        ></div>
+      )}
+      {attackTarget && (
+        <div
+          style={{
+            width: `${TILE_SIZE}px`,
+            height: `${TILE_SIZE}px`,
+            transform: `scale(${scale})`,
+            transformOrigin: "top left",
+            backgroundColor: "red",
+            webkitMaskImage: `url(${sheet})`,
+            webkitMaskPosition: `-${5 * TILE_SIZE}px -${0 * TILE_SIZE}px`,
           }}
         ></div>
       )}
