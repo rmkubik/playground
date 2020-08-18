@@ -4,6 +4,7 @@ import h from "./hyperapp-jsx";
 import "./main.scss";
 
 import { views } from "./views";
+import levels from "./levels";
 
 const onDomEvent = (eventType) =>
   (() => {
@@ -42,26 +43,7 @@ app({
   init: {
     view: "main",
     map: {
-      servers: [
-        {
-          name: "127.0.0.1",
-          icon: [0, 0],
-          statusCode: 200,
-          tiles: [
-            [{ icon: [0, 1] }, 2, 3],
-            [4, 5, 6],
-          ],
-        },
-        {
-          name: "com.google",
-          icon: [0, 0],
-          statusCode: 404,
-          tiles: [
-            [1, 2, 3],
-            [4, { icon: [0, 1] }, 6],
-          ],
-        },
-      ],
+      servers: levels.map((level) => ({ ...level, statusCode: 404 })),
       selected: -1,
     },
     battle: {

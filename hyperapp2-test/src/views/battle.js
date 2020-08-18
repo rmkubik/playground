@@ -28,14 +28,14 @@ const Battle = ({ battle: { tiles, selected } }) => {
     <main>
       <div class="battle-map">
         <Grid sheet={tileSheet} tiles={tiles} />
-        <UnitInfo
-          name={"HACK.slsh"}
-          icon={[0, 1]}
-          size={[3, 4]}
-          abilities={["hack"]}
-          moves={[2, 3]}
-        />
       </div>
+      <UnitInfo
+        name={"HACK.slsh"}
+        icon={[0, 1]}
+        size={[3, 4]}
+        abilities={["hack"]}
+        moves={[2, 3]}
+      />
     </main>
   );
 };

@@ -53,16 +53,14 @@ const Grid = ({ sheet, tiles }) => {
         gridTemplateColumns: `${TILE_SIZE * scale + 16}px `.repeat(
           tiles[0].length
         ),
-        gridTemplateRows: `${TILE_SIZE * scale + 16}px `.repeat(
-          tiles[0].length
-        ),
+        gridTemplateRows: `${TILE_SIZE * scale + 16}px `.repeat(tiles.length),
       }}
     >
       {[].concat(
         ...tiles.map((row, rowIndex) =>
           row.map((tile, colIndex) =>
             tile.icon ? (
-              <Sprite sheet={sheet} icon={tile.icon} scale={scale} />
+              <Sprite sheet={sheet} scale={scale} {...tile} />
             ) : (
               <div
                 class="sprite"
