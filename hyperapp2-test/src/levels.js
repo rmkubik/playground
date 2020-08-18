@@ -1,4 +1,5 @@
 import level1 from "../assets/level1.txt";
+import level2 from "../assets/level2.txt";
 
 const parse = (level) => {
   const lines = level.split("\n");
@@ -7,9 +8,9 @@ const parse = (level) => {
     row.split(" ").map((char) => {
       switch (char) {
         case "s":
-          return { icon: [0, 1], color: "#5454ff" };
+          return { icon: [0, 1], bg: "#5454ff" };
         case "x":
-          return { icon: [0, 2], color: "#ff5454" };
+          return { icon: [0, 2], bg: "#ff5454" };
         default:
           return {};
       }
@@ -23,4 +24,4 @@ const parse = (level) => {
   };
 };
 
-export default [parse(level1)];
+export default [parse(level1), parse(level2)];

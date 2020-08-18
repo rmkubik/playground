@@ -2,13 +2,20 @@ import h from "../hyperapp-jsx";
 
 const TILE_SIZE = 16;
 
-const Sprite = ({ sheet, icon: [row, col], color = "white", scale = 1 }) => {
+const Sprite = ({
+  sheet,
+  icon: [row, col],
+  color = "white",
+  bg = "transparent",
+  scale = 1,
+}) => {
   return (
     <div
       class="sprite"
       style={{
         width: `${TILE_SIZE * scale}px`,
         height: `${TILE_SIZE * scale}px`,
+        backgroundColor: bg,
       }}
     >
       <div
