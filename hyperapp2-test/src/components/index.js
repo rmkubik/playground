@@ -35,6 +35,7 @@ const Sprite = ({
             backgroundColor: color,
             webkitMaskImage: `url(${sheet})`,
             webkitMaskPosition: `-${col * TILE_SIZE}px -${row * TILE_SIZE}px`,
+            position: "absolute",
           }}
         ></div>
       )}
@@ -48,6 +49,7 @@ const Sprite = ({
             backgroundColor: "cyan",
             webkitMaskImage: `url(${sheet})`,
             webkitMaskPosition: `-${4 * TILE_SIZE}px -${0 * TILE_SIZE}px`,
+            position: "absolute",
           }}
         ></div>
       )}
@@ -61,6 +63,7 @@ const Sprite = ({
             backgroundColor: "red",
             webkitMaskImage: `url(${sheet})`,
             webkitMaskPosition: `-${5 * TILE_SIZE}px -${0 * TILE_SIZE}px`,
+            position: "absolute",
           }}
         ></div>
       )}

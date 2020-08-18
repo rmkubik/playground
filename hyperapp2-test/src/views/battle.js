@@ -133,13 +133,6 @@ const Battle = ({
           sheet={tileSheet}
           tiles={tiles.map((row, rowIndex) =>
             row.map((tile, colIndex) => {
-              const unitHead = units.find((unit) =>
-                isUnitHeadAtLocation(unit, [rowIndex, colIndex])
-              );
-              if (unitHead) {
-                return unitHead;
-              }
-
               const neighbors = getNeighbors(tiles, [rowIndex, colIndex]);
               // is neighboring tile selected and a unit's head
               const isNeighborSelected = neighbors.some(
@@ -149,6 +142,16 @@ const Battle = ({
                   units.some((unit) => isUnitHeadAtLocation(unit, selected))
               );
 
+              const unitHead = units.find((unit) =>
+                isUnitHeadAtLocation(unit, [rowIndex, colIndex])
+              );
+              if (unitHead) {
+                return {
+                  ...unitHead,
+                  attackTarget: isNeighborSelected && selectedAction !== -1,
+                };
+              }
+
               const unitPiece = units.find((unit) =>
                 isUnitAtLocation(unit, [rowIndex, colIndex])
               );
@@ -156,6 +159,7 @@ const Battle = ({
                 return {
                   ...unitPiece,
                   icon: [],
+                  attackTarget: isNeighborSelected && selectedAction !== -1,
                 };
               }
 
