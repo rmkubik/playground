@@ -5,6 +5,7 @@ import "./main.scss";
 
 import { views } from "./views";
 import levels from "./levels";
+import moves from "./moves";
 
 const onDomEvent = (eventType) =>
   (() => {
@@ -33,10 +34,10 @@ const Click = (state, event) => {
   }
 };
 
-const App = ({ view = "main", map, battle }) => {
+const App = ({ view = "main", map, battle, moves }) => {
   const CurrentView = views[view];
 
-  return <CurrentView map={map} battle={battle} />;
+  return <CurrentView map={map} battle={battle} moves={moves} />;
 };
 
 app({
@@ -51,6 +52,7 @@ app({
       selected: [],
       units: [],
     },
+    moves,
   },
   view: App,
   node: document.getElementById("app"),

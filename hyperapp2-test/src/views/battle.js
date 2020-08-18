@@ -79,7 +79,7 @@ const UnitInfo = ({
       <HR />
       <ul>
         {abilities.map((ability) => (
-          <li>{ability}</li>
+          <li>{`${ability.key} - ${ability.power}`}</li>
         ))}
       </ul>
       <HR />
@@ -87,7 +87,7 @@ const UnitInfo = ({
   );
 };
 
-const Battle = ({ battle: { tiles, selected, units } }) => {
+const Battle = ({ battle: { tiles, selected, units }, moves }) => {
   const selectedInfo =
     tiles[selected[0]] &&
     units.find((unit) => isUnitHeadAtLocation(unit, selected));
@@ -135,7 +135,18 @@ const Battle = ({ battle: { tiles, selected, units } }) => {
           selected={selected}
         />
       </div>
-      <UnitInfo unit={selectedInfo ? selectedInfo : {}} />
+      <UnitInfo
+        unit={
+          selectedInfo
+            ? {
+                ...selectedInfo,
+                abilities: selectedInfo.abilities.map(
+                  (ability) => moves[ability]
+                ),
+              }
+            : {}
+        }
+      />
     </main>
   );
 };
