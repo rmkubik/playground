@@ -22,7 +22,7 @@ const parse = (level) => {
           units.push({
             icon: [0, 2],
             bg: "#ff5454",
-            name: "GUARD",
+            name: "GUARD_AV",
             size: [1, 3],
             abilities: ["bash"],
             moves: [2, 2],

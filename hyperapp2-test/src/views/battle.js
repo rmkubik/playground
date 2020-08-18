@@ -21,6 +21,28 @@ const SelectUnit = (state, location) => {
   };
 };
 
+const DeselectUnit = (state, location) => {
+  return {
+    ...state,
+    battle: {
+      ...state.battle,
+      selected: [],
+    },
+    view: "battle",
+  };
+};
+
+const ClickTile = (state, location) => {
+  if (
+    state.battle.selected[0] === location[0] &&
+    state.battle.selected[1] === location[1]
+  ) {
+    return DeselectUnit(state, location);
+  } else {
+    return SelectUnit(state, location);
+  }
+};
+
 const UnitInfo = ({
   unit: {
     name = "NONE SELECTED",
@@ -79,7 +101,7 @@ const Battle = ({ battle: { tiles, selected, units } }) => {
               return tile;
             })
           )}
-          onTileClick={SelectUnit}
+          onTileClick={ClickTile}
           selected={selected}
         />
       </div>
