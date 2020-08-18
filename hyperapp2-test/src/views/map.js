@@ -3,8 +3,7 @@ import h from "../hyperapp-jsx";
 import tileSheet from "../../assets/tiles.png";
 
 import { Server } from "../components";
-
-const deepClone = (obj) => JSON.parse(JSON.stringify(obj));
+import { deepClone } from "../utils";
 
 const StartBattle = (state, index) => {
   return {

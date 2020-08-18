@@ -4,31 +4,36 @@ const TILE_SIZE = 16;
 
 const Sprite = ({
   sheet,
-  icon: [row, col],
+  icon: [row, col] = [],
   color = "white",
   bg = "transparent",
   scale = 1,
+  onclick,
+  selected,
 }) => {
   return (
     <div
-      class="sprite"
+      class={`sprite${selected ? " selected" : ""}`}
       style={{
         width: `${TILE_SIZE * scale}px`,
         height: `${TILE_SIZE * scale}px`,
         backgroundColor: bg,
       }}
+      onclick={onclick}
     >
-      <div
-        style={{
-          width: `${TILE_SIZE}px`,
-          height: `${TILE_SIZE}px`,
-          transform: `scale(${scale})`,
-          transformOrigin: "top left",
-          backgroundColor: color,
-          webkitMaskImage: `url(${sheet})`,
-          webkitMaskPosition: `-${col * TILE_SIZE}px -${row * TILE_SIZE}px`,
-        }}
-      ></div>
+      {row !== undefined && (
+        <div
+          style={{
+            width: `${TILE_SIZE}px`,
+            height: `${TILE_SIZE}px`,
+            transform: `scale(${scale})`,
+            transformOrigin: "top left",
+            backgroundColor: color,
+            webkitMaskImage: `url(${sheet})`,
+            webkitMaskPosition: `-${col * TILE_SIZE}px -${row * TILE_SIZE}px`,
+          }}
+        ></div>
+      )}
     </div>
   );
 };
@@ -50,7 +55,7 @@ const Server = ({ sheet, icon, label, statusCode, onclick }) => {
   );
 };
 
-const Grid = ({ sheet, tiles }) => {
+const Grid = ({ sheet, tiles, onTileClick, selected }) => {
   const scale = 3;
   return (
     <div
@@ -65,19 +70,15 @@ const Grid = ({ sheet, tiles }) => {
     >
       {[].concat(
         ...tiles.map((row, rowIndex) =>
-          row.map((tile, colIndex) =>
-            tile.icon ? (
-              <Sprite sheet={sheet} scale={scale} {...tile} />
-            ) : (
-              <div
-                class="sprite"
-                style={{
-                  width: `${TILE_SIZE * scale}px`,
-                  height: `${TILE_SIZE * scale}px`,
-                }}
-              ></div>
-            )
-          )
+          row.map((tile, colIndex) => (
+            <Sprite
+              onclick={(state) => onTileClick(state, [rowIndex, colIndex])}
+              sheet={sheet}
+              scale={scale}
+              selected={selected[0] === rowIndex && selected[1] === colIndex}
+              {...tile}
+            />
+          ))
         )
       )}
     </div>

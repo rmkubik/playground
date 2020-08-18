@@ -3,6 +3,18 @@ import h from "../hyperapp-jsx";
 import tileSheet from "../../assets/tiles.png";
 
 import { Sprite, Grid } from "../components/index";
+import { deepClone } from "../utils";
+
+const SelectUnit = (state, location) => {
+  return {
+    ...state,
+    battle: {
+      ...state.battle,
+      selected: location,
+    },
+    view: "battle",
+  };
+};
 
 const UnitInfo = ({ name, icon, size, abilities, moves }) => {
   const header = `--[ ${name} ]--`;
@@ -27,7 +39,12 @@ const Battle = ({ battle: { tiles, selected } }) => {
   return (
     <main>
       <div class="battle-map">
-        <Grid sheet={tileSheet} tiles={tiles} />
+        <Grid
+          sheet={tileSheet}
+          tiles={tiles}
+          onTileClick={SelectUnit}
+          selected={selected}
+        />
       </div>
       <UnitInfo
         name={"HACK.slsh"}
