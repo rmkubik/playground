@@ -10,6 +10,21 @@ const isUnitHeadAtLocation = (unit, [row, col]) =>
 const isUnitAtLocation = (unit, [row, col]) =>
   unit.tiles.some((tile) => tile[0] === row && tile[1] === col);
 
+const isLocationInBounds = (tiles, location) =>
+  location[0] >= 0 &&
+  location[1] >= 0 &&
+  location[0] < tiles.length &&
+  location[1] < tiles[0].length;
+
+const getNeighbors = (tiles, location) => {
+  return [
+    [location[0] + 1, location[1]],
+    [location[0] - 1, location[1]],
+    [location[0], location[1] + 1],
+    [location[0], location[1] - 1],
+  ].filter((neighbor) => isLocationInBounds(tiles, neighbor));
+};
+
 const SelectUnit = (state, location) => {
   return {
     ...state,
@@ -91,14 +106,29 @@ const Battle = ({ battle: { tiles, selected, units } }) => {
                 return unitHead;
               }
 
+              const neighbors = getNeighbors(tiles, [rowIndex, colIndex]);
+              // is neighboring tile selected and a unit's head
+              const isNeighborSelected = neighbors.some(
+                (neighbor) =>
+                  selected[0] === neighbor[0] &&
+                  selected[1] === neighbor[1] &&
+                  units.some((unit) => isUnitHeadAtLocation(unit, selected))
+              );
+
               const unitPiece = units.find((unit) =>
                 isUnitAtLocation(unit, [rowIndex, colIndex])
               );
               if (unitPiece) {
-                return { ...unitPiece, icon: [] };
+                return {
+                  ...unitPiece,
+                  icon: [],
+                };
               }
 
-              return tile;
+              return {
+                ...tile,
+                moveTarget: isNeighborSelected,
+              };
             })
           )}
           onTileClick={ClickTile}

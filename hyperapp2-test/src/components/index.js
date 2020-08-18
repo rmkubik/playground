@@ -10,10 +10,13 @@ const Sprite = ({
   scale = 1,
   onclick,
   selected,
+  moveTarget,
 }) => {
   return (
     <div
-      class={`sprite${selected ? " selected" : ""}`}
+      class={`sprite${selected ? " selected" : ""}${
+        moveTarget ? " move-target" : ""
+      }`}
       style={{
         width: `${TILE_SIZE * scale}px`,
         height: `${TILE_SIZE * scale}px`,
