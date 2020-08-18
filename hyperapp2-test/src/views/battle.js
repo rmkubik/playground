@@ -21,7 +21,15 @@ const SelectUnit = (state, location) => {
   };
 };
 
-const UnitInfo = ({ name, icon, size, abilities, moves }) => {
+const UnitInfo = ({
+  unit: {
+    name = "NONE SELECTED",
+    icon = [0, 3],
+    size = [],
+    abilities = [],
+    moves = [],
+  },
+}) => {
   const header = `--[ ${name} ]--`;
   const HR = () => <p>{"-".repeat(header.length)}</p>;
 
@@ -43,7 +51,9 @@ const UnitInfo = ({ name, icon, size, abilities, moves }) => {
 };
 
 const Battle = ({ battle: { tiles, selected, units } }) => {
-  const selectedInfo = tiles[selected[0]] && tiles[selected[0]][selected[1]];
+  const selectedInfo =
+    tiles[selected[0]] &&
+    units.find((unit) => isUnitHeadAtLocation(unit, selected));
 
   return (
     <main>
@@ -73,13 +83,7 @@ const Battle = ({ battle: { tiles, selected, units } }) => {
           selected={selected}
         />
       </div>
-      <UnitInfo
-        name={selectedInfo ? selectedInfo.name : "NONE SELECTED"}
-        icon={selectedInfo ? selectedInfo.icon : [0, 3]}
-        size={selectedInfo ? selectedInfo.size : []}
-        abilities={selectedInfo ? selectedInfo.abilities : []}
-        moves={selectedInfo ? selectedInfo.moves : []}
-      />
+      <UnitInfo unit={selectedInfo ? selectedInfo : {}} />
     </main>
   );
 };
