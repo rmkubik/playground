@@ -5,6 +5,11 @@ import tileSheet from "../../assets/tiles.png";
 import { Sprite, Grid } from "../components/index";
 import { deepClone } from "../utils";
 
+const isUnitHeadAtLocation = (unit, [row, col]) =>
+  unit.tiles[0][0] === row && unit.tiles[0][1] === col;
+const isUnitAtLocation = (unit, [row, col]) =>
+  unit.tiles.some((tile) => tile[0] === row && tile[1] === col);
+
 const SelectUnit = (state, location) => {
   return {
     ...state,
@@ -37,7 +42,7 @@ const UnitInfo = ({ name, icon, size, abilities, moves }) => {
   );
 };
 
-const Battle = ({ battle: { tiles, selected } }) => {
+const Battle = ({ battle: { tiles, selected, units } }) => {
   const selectedInfo = tiles[selected[0]] && tiles[selected[0]][selected[1]];
 
   return (
@@ -45,7 +50,25 @@ const Battle = ({ battle: { tiles, selected } }) => {
       <div class="battle-map">
         <Grid
           sheet={tileSheet}
-          tiles={tiles}
+          tiles={tiles.map((row, rowIndex) =>
+            row.map((tile, colIndex) => {
+              const unitHead = units.find((unit) =>
+                isUnitHeadAtLocation(unit, [rowIndex, colIndex])
+              );
+              if (unitHead) {
+                return unitHead;
+              }
+
+              const unitPiece = units.find((unit) =>
+                isUnitAtLocation(unit, [rowIndex, colIndex])
+              );
+              if (unitPiece) {
+                return { ...unitPiece, icon: [] };
+              }
+
+              return tile;
+            })
+          )}
           onTileClick={SelectUnit}
           selected={selected}
         />

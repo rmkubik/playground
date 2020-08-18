@@ -5,8 +5,8 @@ const parse = (level) => {
   const lines = level.split("\n");
   const icon = lines[1].split(" ");
   const units = [];
-  const tiles = lines.slice(2).map((row) =>
-    row.split(" ").map((char) => {
+  const tiles = lines.slice(2).map((row, rowIndex) =>
+    row.split(" ").map((char, colIndex) => {
       switch (char) {
         case "s":
           units.push({
@@ -16,6 +16,7 @@ const parse = (level) => {
             size: [1, 4],
             abilities: ["hack"],
             moves: [3, 3],
+            tiles: [[rowIndex, colIndex]],
           });
         case "x":
           units.push({
@@ -25,6 +26,7 @@ const parse = (level) => {
             size: [1, 3],
             abilities: ["bash"],
             moves: [2, 2],
+            tiles: [[rowIndex, colIndex]],
           });
         default:
           break;
