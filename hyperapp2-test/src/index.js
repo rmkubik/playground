@@ -51,6 +51,7 @@ app({
       tiles: [[]],
       selected: [],
       units: [],
+      selectedAction: -1,
     },
     moves,
   },

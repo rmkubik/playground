@@ -25,6 +25,34 @@ const getNeighbors = (tiles, location) => {
   ].filter((neighbor) => isLocationInBounds(tiles, neighbor));
 };
 
+const SelectAbility = (state, index) => {
+  return {
+    ...state,
+    battle: {
+      ...state.battle,
+      selectedAction: index,
+    },
+  };
+};
+
+const DeselectAbility = (state, index) => {
+  return {
+    ...state,
+    battle: {
+      ...state.battle,
+      selectedAction: -1,
+    },
+  };
+};
+
+const ClickAbility = (state, index) => {
+  if (state.battle.selectedAction === index) {
+    return DeselectAbility(state, index);
+  } else {
+    return SelectAbility(state, index);
+  }
+};
+
 const SelectUnit = (state, location) => {
   return {
     ...state,
@@ -32,7 +60,6 @@ const SelectUnit = (state, location) => {
       ...state.battle,
       selected: location,
     },
-    view: "battle",
   };
 };
 
@@ -43,7 +70,6 @@ const DeselectUnit = (state, location) => {
       ...state.battle,
       selected: [],
     },
-    view: "battle",
   };
 };
 
@@ -78,8 +104,11 @@ const UnitInfo = ({
       <p>{`Moves: ${moves[0] || "?"}/${moves[1] || "?"}`}</p>
       <HR />
       <ul>
-        {abilities.map((ability) => (
-          <li>{`${ability.key} - ${ability.power}`}</li>
+        {abilities.map((ability, index) => (
+          <li
+            onclick={(state) => ClickAbility(state, index)}
+            class={ability.selected && "selected"}
+          >{`${ability.key} - ${ability.power}`}</li>
         ))}
       </ul>
       <HR />
@@ -87,7 +116,10 @@ const UnitInfo = ({
   );
 };
 
-const Battle = ({ battle: { tiles, selected, units }, moves }) => {
+const Battle = ({
+  battle: { tiles, selected, units, selectedAction },
+  moves,
+}) => {
   const selectedInfo =
     tiles[selected[0]] &&
     units.find((unit) => isUnitHeadAtLocation(unit, selected));
@@ -140,9 +172,10 @@ const Battle = ({ battle: { tiles, selected, units }, moves }) => {
           selectedInfo
             ? {
                 ...selectedInfo,
-                abilities: selectedInfo.abilities.map(
-                  (ability) => moves[ability]
-                ),
+                abilities: selectedInfo.abilities.map((ability, index) => ({
+                  ...moves[ability],
+                  selected: selectedAction === index,
+                })),
               }
             : {}
         }
