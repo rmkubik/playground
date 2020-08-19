@@ -9,6 +9,19 @@ body {
   image-rendering: pixelated;
 }
 
+button {
+  font-family: Menlo, Courier, monospace;
+  background: black;
+  color: white;
+  padding: 1ch 2ch;
+  border: 1px solid white;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $hover-color;
+  }
+}
+
 p {
   margin-top: 32px;
 }

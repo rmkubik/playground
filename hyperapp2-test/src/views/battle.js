@@ -252,6 +252,7 @@ const Battle = ({
             : {}
         }
       />
+      <button>End Turn</button>
     </main>
   );
 };
