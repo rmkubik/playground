@@ -65,13 +65,18 @@ const isLocationValidMoveTarget = (
 ) => {
   const neighbors = getNeighbors(tiles, location);
   // is neighboring tile selected and a unit's head
+  const neighborUnitHead = units.find((unit) =>
+    isUnitHeadAtLocation(unit, selected)
+  );
+
   return (
     neighbors.some(
       (neighbor) =>
         selected[0] === neighbor[0] &&
         selected[1] === neighbor[1] && // is selected tile a neighbor of this one
-        units.some((unit) => isUnitHeadAtLocation(unit, selected)) && // is the selected tile a unit head
-        !units.some((unit) => isUnitAtLocation(unit, location)) // is the selected tile empty
+        neighborUnitHead && // is the selected tile a unit head
+        !units.some((unit) => isUnitAtLocation(unit, location)) && // is the selected tile empty
+        neighborUnitHead.moves[0] > 0
     ) && selectedAction === -1
   );
 };
@@ -99,6 +104,11 @@ const MoveUnit = (state, selectedUnitIndex, location) => {
     battle: {
       ...state.battle,
       units: updateArray(state.battle.units, selectedUnitIndex, (unit) => {
+        if (unit.moves[0] === 0) {
+          // if we're out of moves, make no unit changes
+          return unit;
+        }
+
         const tiles = [location, ...unit.tiles];
 
         if (tiles.length > unit.size) {
@@ -107,6 +117,7 @@ const MoveUnit = (state, selectedUnitIndex, location) => {
 
         return {
           ...unit,
+          moves: [unit.moves[0] - 1, unit.moves[1]],
           tiles,
         };
       }),
