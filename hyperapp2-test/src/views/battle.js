@@ -112,10 +112,17 @@ const MoveUnit = (state, selectedUnitIndex, location) => {
     ...state,
     battle: {
       ...state.battle,
-      units: updateArray(state.battle.units, selectedUnitIndex, (unit) => ({
-        ...unit,
-        tiles: [location, ...unit.tiles],
-      })),
+      units: updateArray(state.battle.units, selectedUnitIndex, (unit) => {
+        const tiles = [location, ...unit.tiles];
+        if (tiles.length > unit.size[1]) {
+          tiles.pop();
+        }
+
+        return {
+          ...unit,
+          tiles,
+        };
+      }),
       selected: location,
     },
   };
