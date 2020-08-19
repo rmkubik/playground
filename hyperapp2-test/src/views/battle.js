@@ -114,7 +114,8 @@ const MoveUnit = (state, selectedUnitIndex, location) => {
       ...state.battle,
       units: updateArray(state.battle.units, selectedUnitIndex, (unit) => {
         const tiles = [location, ...unit.tiles];
-        if (tiles.length > unit.size[1]) {
+
+        if (tiles.length > unit.size) {
           tiles.pop();
         }
 
@@ -156,9 +157,10 @@ const UnitInfo = ({
   unit: {
     name = "NONE SELECTED",
     icon = [0, 3],
-    size = [],
+    size = undefined,
     abilities = [],
     moves = [],
+    tiles = [],
   },
 }) => {
   const header = `--[ ${name} ]--`;
@@ -168,7 +170,7 @@ const UnitInfo = ({
     <div class="unit-info">
       <p>{header}</p>
       <Sprite sheet={tileSheet} icon={icon} scale={3} />
-      <p>{`Size: ${size[0] || "?"}/${size[1] || "?"}`}</p>
+      <p>{`Size: ${tiles.length || "?"}/${size || "?"}`}</p>
       <p>{`Moves: ${moves[0] || "?"}/${moves[1] || "?"}`}</p>
       <HR />
       <ul>
