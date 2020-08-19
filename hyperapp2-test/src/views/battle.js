@@ -126,6 +126,39 @@ const MoveUnit = (state, selectedUnitIndex, location) => {
   };
 };
 
+const UseAbility = (state, selectedUnitIndex, location) => {
+  // if (selectedAction === 'hack') {
+  //
+  // }
+
+  const selectedUnit = state.battle.units[selectedUnitIndex];
+  const ability =
+    state.moves[selectedUnit.abilities[state.battle.selectedAction]];
+
+  const targetUnitIndex = state.battle.units.findIndex((unit) =>
+    isUnitAtLocation(unit, location)
+  );
+
+  if (targetUnitIndex === -1) {
+    return state;
+  }
+
+  return {
+    ...state,
+    battle: {
+      ...state.battle,
+      units: updateArray(state.battle.units, targetUnitIndex, (unit) => {
+        const tiles = unit.tiles.slice(0, unit.tiles.length - ability.power);
+
+        return {
+          ...unit,
+          tiles,
+        };
+      }).filter((unit) => unit.tiles.length > 0),
+    },
+  };
+};
+
 const ClickTile = (state, location) => {
   const deselectedAbilityState = DeselectAbility(state);
 
@@ -145,6 +178,16 @@ const ClickTile = (state, location) => {
     );
 
     return MoveUnit(state, selectedUnitIndex, location);
+  } else if (
+    state.battle.selected.length === 2 &&
+    state.battle.selectedAction !== -1 &&
+    isLocationValidAttackTarget(state.battle, location)
+  ) {
+    // ability action
+    const selectedUnitIndex = state.battle.units.findIndex((unit) =>
+      isUnitHeadAtLocation(unit, state.battle.selected)
+    );
+    return UseAbility(state, selectedUnitIndex, location);
   } else {
     return SelectUnit(deselectedAbilityState, location);
   }
