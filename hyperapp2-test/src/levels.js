@@ -18,6 +18,7 @@ const parse = (level) => {
             moves: [3, 3],
             tiles: [[rowIndex, colIndex]],
           });
+          break;
         case "x":
           units.push({
             icon: [0, 2],
@@ -28,6 +29,7 @@ const parse = (level) => {
             moves: [2, 2],
             tiles: [[rowIndex, colIndex]],
           });
+          break;
         default:
           break;
       }

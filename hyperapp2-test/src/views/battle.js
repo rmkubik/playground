@@ -3,7 +3,7 @@ import h from "../hyperapp-jsx";
 import tileSheet from "../../assets/tiles.png";
 
 import { Sprite, Grid } from "../components/index";
-import { deepClone } from "../utils";
+import { deepClone, updateArray } from "../utils";
 
 const isUnitHeadAtLocation = (unit, [row, col]) =>
   unit.tiles[0][0] === row && unit.tiles[0][1] === col;
@@ -73,6 +73,54 @@ const DeselectUnit = (state) => {
   };
 };
 
+const isLocationValidMoveTarget = (
+  { units, tiles, selected, selectedAction },
+  location
+) => {
+  const neighbors = getNeighbors(tiles, location);
+  // is neighboring tile selected and a unit's head
+  return (
+    neighbors.some(
+      (neighbor) =>
+        selected[0] === neighbor[0] &&
+        selected[1] === neighbor[1] && // is selected tile a neighbor of this one
+        units.some((unit) => isUnitHeadAtLocation(unit, selected)) && // is the selected tile a unit head
+        !units.some((unit) => isUnitAtLocation(unit, location)) // is the selected tile empty
+    ) && selectedAction === -1
+  );
+};
+
+const isLocationValidAttackTarget = (
+  { units, tiles, selected, selectedAction },
+  location
+) => {
+  const neighbors = getNeighbors(tiles, location);
+  // is neighboring tile selected and a unit's head
+  return (
+    neighbors.some(
+      (neighbor) =>
+        selected[0] === neighbor[0] &&
+        selected[1] === neighbor[1] && // is selected tile a neighbor of this one
+        units.some((unit) => isUnitHeadAtLocation(unit, selected)) // is the selected tile a unit head
+      // && units.some((unit) => isUnitAtLocation(unit, selected)) // is the selected tile an enemy unit
+    ) && selectedAction !== -1
+  );
+};
+
+const MoveUnit = (state, selectedUnitIndex, location) => {
+  return {
+    ...state,
+    battle: {
+      ...state.battle,
+      units: updateArray(state.battle.units, selectedUnitIndex, (unit) => ({
+        ...unit,
+        tiles: [location, ...unit.tiles],
+      })),
+      selected: location,
+    },
+  };
+};
+
 const ClickTile = (state, location) => {
   const deselectedAbilityState = DeselectAbility(state);
 
@@ -81,6 +129,17 @@ const ClickTile = (state, location) => {
     state.battle.selected[1] === location[1]
   ) {
     return DeselectUnit(deselectedAbilityState);
+  } else if (
+    state.battle.selected.length === 2 &&
+    state.battle.selectedAction === -1 &&
+    isLocationValidMoveTarget(state.battle, location)
+  ) {
+    // move action
+    const selectedUnitIndex = state.battle.units.findIndex((unit) =>
+      isUnitHeadAtLocation(unit, state.battle.selected)
+    );
+
+    return MoveUnit(state, selectedUnitIndex, location);
   } else {
     return SelectUnit(deselectedAbilityState, location);
   }
@@ -133,13 +192,13 @@ const Battle = ({
           sheet={tileSheet}
           tiles={tiles.map((row, rowIndex) =>
             row.map((tile, colIndex) => {
-              const neighbors = getNeighbors(tiles, [rowIndex, colIndex]);
-              // is neighboring tile selected and a unit's head
-              const isNeighborSelected = neighbors.some(
-                (neighbor) =>
-                  selected[0] === neighbor[0] &&
-                  selected[1] === neighbor[1] &&
-                  units.some((unit) => isUnitHeadAtLocation(unit, selected))
+              const moveTarget = isLocationValidMoveTarget(
+                { tiles, selected, units, selectedAction },
+                [rowIndex, colIndex]
+              );
+              const attackTarget = isLocationValidAttackTarget(
+                { tiles, selected, units, selectedAction },
+                [rowIndex, colIndex]
               );
 
               const unitHead = units.find((unit) =>
@@ -148,7 +207,7 @@ const Battle = ({
               if (unitHead) {
                 return {
                   ...unitHead,
-                  attackTarget: isNeighborSelected && selectedAction !== -1,
+                  attackTarget,
                 };
               }
 
@@ -159,14 +218,14 @@ const Battle = ({
                 return {
                   ...unitPiece,
                   icon: [],
-                  attackTarget: isNeighborSelected && selectedAction !== -1,
+                  attackTarget,
                 };
               }
 
               return {
                 ...tile,
-                moveTarget: isNeighborSelected && selectedAction === -1,
-                attackTarget: isNeighborSelected && selectedAction !== -1,
+                moveTarget,
+                attackTarget,
               };
             })
           )}
