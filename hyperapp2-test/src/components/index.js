@@ -1,5 +1,7 @@
 import h from "../hyperapp-jsx";
 
+import { isUnitAtLocation, getNeighborLocations } from "../utils";
+
 const TILE_SIZE = 16;
 
 const Sprite = ({
@@ -12,6 +14,7 @@ const Sprite = ({
   selected,
   moveTarget,
   attackTarget,
+  neighbors = [],
 }) => {
   return (
     <div
@@ -22,6 +25,34 @@ const Sprite = ({
         width: `${TILE_SIZE * scale}px`,
         height: `${TILE_SIZE * scale}px`,
         backgroundColor: bg,
+        borderTop:
+          neighbors.some((neighbor) => neighbor[0] === -1) &&
+          !selected &&
+          !moveTarget &&
+          !attackTarget
+            ? "2px solid transparent"
+            : "",
+        borderBottom:
+          neighbors.some((neighbor) => neighbor[0] === 1) &&
+          !selected &&
+          !moveTarget &&
+          !attackTarget
+            ? "2px solid transparent"
+            : "",
+        borderRight:
+          neighbors.some((neighbor) => neighbor[1] === 1) &&
+          !selected &&
+          !moveTarget &&
+          !attackTarget
+            ? "2px solid transparent"
+            : "",
+        borderLeft:
+          neighbors.some((neighbor) => neighbor[1] === -1) &&
+          !selected &&
+          !moveTarget &&
+          !attackTarget
+            ? "2px solid transparent"
+            : "",
       }}
       onclick={onclick}
     >
@@ -109,6 +140,12 @@ const Grid = ({ sheet, tiles, onTileClick, selected }) => {
               sheet={sheet}
               scale={scale}
               selected={selected[0] === rowIndex && selected[1] === colIndex}
+              neighbors={getNeighborLocations(tiles, [rowIndex, colIndex])
+                .filter((neighbor) => isUnitAtLocation(tile, neighbor))
+                .map((location) => [
+                  location[0] - rowIndex,
+                  location[1] - colIndex,
+                ])}
               {...tile}
             />
           ))

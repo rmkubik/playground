@@ -3,27 +3,13 @@ import h from "../hyperapp-jsx";
 import tileSheet from "../../assets/tiles.png";
 
 import { Sprite, Grid } from "../components/index";
-import { deepClone, updateArray } from "../utils";
-
-const isUnitHeadAtLocation = (unit, [row, col]) =>
-  unit.tiles[0][0] === row && unit.tiles[0][1] === col;
-const isUnitAtLocation = (unit, [row, col]) =>
-  unit.tiles.some((tile) => tile[0] === row && tile[1] === col);
-
-const isLocationInBounds = (tiles, location) =>
-  location[0] >= 0 &&
-  location[1] >= 0 &&
-  location[0] < tiles.length &&
-  location[1] < tiles[0].length;
-
-const getNeighbors = (tiles, location) => {
-  return [
-    [location[0] + 1, location[1]],
-    [location[0] - 1, location[1]],
-    [location[0], location[1] + 1],
-    [location[0], location[1] - 1],
-  ].filter((neighbor) => isLocationInBounds(tiles, neighbor));
-};
+import {
+  deepClone,
+  updateArray,
+  isUnitHeadAtLocation,
+  isUnitAtLocation,
+  getNeighbors,
+} from "../utils";
 
 const SelectAbility = (state, index) => {
   return {
@@ -201,6 +187,17 @@ const Battle = ({
           sheet={tileSheet}
           tiles={tiles.map((row, rowIndex) =>
             row.map((tile, colIndex) => {
+              if (tile === null) {
+                tile = {
+                  name: undefined,
+                  icon: undefined,
+                  size: undefined,
+                  abilities: [],
+                  moves: [],
+                  tiles: [],
+                };
+              }
+
               const moveTarget = isLocationValidMoveTarget(
                 { tiles, selected, units, selectedAction },
                 [rowIndex, colIndex]
