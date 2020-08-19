@@ -15,7 +15,7 @@ const parse = (level) => {
             name: "HACK.slsh",
             size: 4,
             abilities: ["hack"],
-            moves: [3, 3],
+            moves: [2, 2],
             tiles: [[rowIndex, colIndex]],
           });
           break;
@@ -26,7 +26,7 @@ const parse = (level) => {
             name: "GUARD_AV",
             size: 3,
             abilities: ["bash"],
-            moves: [2, 2],
+            moves: [1, 1],
             tiles: [[rowIndex, colIndex]],
           });
           break;
