@@ -10,6 +10,8 @@ import {
   isUnitAtLocation,
   getNeighbors,
   findAllIndices,
+  manhattanDistance,
+  pickRandomlyFromArray,
 } from "../utils";
 
 const SelectAbility = (state, index) => {
@@ -218,12 +220,46 @@ const ClickTile = (state, location) => {
 
 const EndTurn = (state) => {
   // perform enemy actions
+  const isNotActedEnemyUnit = (unit) => !unit.acted && unit.owner !== 0;
+
+  let newState = deepClone(state);
+
+  state.battle.units.forEach((unit, index) => {
+    if (isNotActedEnemyUnit(unit)) {
+      // find x and y distance to nearest player unit
+      // const playerUnitDistances = state.battle.units
+      //   .map((unit, index) => [manhattanDistance(), unit, index])
+      //   .filter((unit) => unit.owner === 0);
+      // const nearestPlayerUnit = {};
+      // move x or y toward nearest player unit
+      // recurse until moves are 0
+      // is neighboring player unit?
+      // use ability on player unit
+      newState = SelectUnit(newState, unit.tiles[0]);
+      const neighbors = getNeighbors(newState.battle.tiles, unit.tiles[0]);
+      const moveOptions = neighbors.filter((neighbor) =>
+        isLocationValidMoveTarget(newState.battle, neighbor)
+      );
+
+      if (moveOptions.length > 0) {
+        newState = MoveUnit(
+          newState,
+          index,
+          pickRandomlyFromArray(moveOptions)
+        );
+      }
+
+      newState = DeselectAbility(newState);
+      newState = DeselectUnit(newState);
+    }
+  });
 
   // reset units
-  const units = state.battle.units.map((unit) => ({
+  const units = newState.battle.units.map((unit) => ({
     ...unit,
     moves: [unit.moves[1], unit.moves[1]],
     ap: [unit.ap[1], unit.ap[1]],
+    acted: false,
   }));
 
   return {
