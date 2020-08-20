@@ -188,6 +188,7 @@ const ClickTile = (state, location) => {
   const selectedUnitIndex = state.battle.units.findIndex((unit) =>
     isUnitHeadAtLocation(unit, state.battle.selected)
   );
+  const selectedUnit = state.battle.units[selectedUnitIndex];
 
   if (
     state.battle.selected[0] === location[0] &&
@@ -197,14 +198,16 @@ const ClickTile = (state, location) => {
   } else if (
     state.battle.selected.length === 2 &&
     state.battle.selectedAction === -1 &&
-    isLocationValidMoveTarget(state.battle, location)
+    isLocationValidMoveTarget(state.battle, location) &&
+    selectedUnit.owner === 0 // only let player move own units
   ) {
     // move action
     return MoveUnit(state, selectedUnitIndex, location);
   } else if (
     state.battle.selected.length === 2 &&
     state.battle.selectedAction !== -1 &&
-    isLocationValidAttackTarget(state.battle, location)
+    isLocationValidAttackTarget(state.battle, location) &&
+    selectedUnit.owner === 0 // only let player use action of own units
   ) {
     // ability action
     return UseAbility(state, selectedUnitIndex, location);
