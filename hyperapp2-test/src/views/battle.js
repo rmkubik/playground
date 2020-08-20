@@ -143,6 +143,7 @@ const UseAbility = (state, selectedUnitIndex, location) => {
     return state;
   }
 
+  // if no unit is there, don't do anything
   const targetUnitIndex = state.battle.units.findIndex((unit) =>
     isUnitAtLocation(unit, location)
   );
@@ -224,7 +225,15 @@ const EndTurn = (state) => {
 
   let newState = deepClone(state);
 
-  state.battle.units.forEach((unit, index) => {
+  state.battle.units.forEach((unit) => {
+    // re-calculate index instead of pulling it out of the for loop since
+    // units can be destroyed from array
+    const index = newState.battle.units.findIndex(
+      (target) =>
+        target.tiles[0][0] === unit.tiles[0][0] &&
+        target.tiles[0][1] === unit.tiles[0][1]
+    );
+
     if (isNotActedEnemyUnit(unit)) {
       // find x and y distance to nearest player unit
       // const playerUnitDistances = state.battle.units
@@ -236,7 +245,8 @@ const EndTurn = (state) => {
       // is neighboring player unit?
       // use ability on player unit
       newState = SelectUnit(newState, unit.tiles[0]);
-      const neighbors = getNeighbors(newState.battle.tiles, unit.tiles[0]);
+
+      let neighbors = getNeighbors(newState.battle.tiles, unit.tiles[0]);
       const moveOptions = neighbors.filter((neighbor) =>
         isLocationValidMoveTarget(newState.battle, neighbor)
       );
@@ -246,6 +256,49 @@ const EndTurn = (state) => {
           newState,
           index,
           pickRandomlyFromArray(moveOptions)
+        );
+      }
+
+      // hard code to always pick first AI ability
+      newState = SelectAbility(newState, 0);
+
+      const selectedUnit = newState.battle.units[index];
+      neighbors = getNeighbors(newState.battle.tiles, selectedUnit.tiles[0]);
+      const attackOptions = neighbors
+        .filter((neighbor) =>
+          // filter out any neighbors without units on them
+          newState.battle.units.some((unit) => isUnitAtLocation(unit, neighbor))
+        )
+        .filter((neighbor) =>
+          // this may already be validated in our scenario
+          isLocationValidAttackTarget(newState.battle, neighbor)
+        )
+        // filter out non-player unis to prevent firendly AI fire
+        // check if any option is contained in a the tiles of a non-player unit
+        .filter(
+          (option) =>
+            newState.battle.units.find((unit) =>
+              unit.tiles.some(
+                (tile) => tile[0] === option[0] && tile[1] === option[1]
+              )
+            ).owner === 0
+        );
+
+      console.log(
+        deepClone(newState.battle.units[index].tiles[0]),
+        deepClone(newState),
+        deepClone(attackOptions)
+      );
+
+      if (attackOptions.length > 0) {
+        console.log(
+          newState.battle.selected,
+          newState.battle.units[index].tiles[0]
+        );
+        newState = UseAbility(
+          newState,
+          index,
+          pickRandomlyFromArray(attackOptions)
         );
       }
 
