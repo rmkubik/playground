@@ -29,6 +29,18 @@ const getNeighborLocations = (tiles, location) => {
 
 const getNeighbors = getNeighborLocations;
 
+function findAllIndices(array, comparator) {
+  const indices = [];
+
+  for (let i = 0; i < array.length; i = +1) {
+    if (comparator(array[i], i, array)) {
+      indexes.push(i);
+    }
+  }
+
+  return indices;
+}
+
 export {
   deepClone,
   updateArray,
@@ -37,4 +49,5 @@ export {
   isLocationInBounds,
   getNeighbors,
   getNeighborLocations,
+  findAllIndices,
 };

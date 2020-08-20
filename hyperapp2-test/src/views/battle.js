@@ -9,6 +9,7 @@ import {
   isUnitHeadAtLocation,
   isUnitAtLocation,
   getNeighbors,
+  findAllIndices,
 } from "../utils";
 
 const SelectAbility = (state, index) => {
@@ -219,13 +220,19 @@ const ClickTile = (state, location) => {
 const EndTurn = (state) => {
   // perform enemy actions
 
-  // reset player units
+  // reset units
+  const units = state.battle.units.map((unit) => ({
+    ...unit,
+    moves: [unit.moves[1], unit.moves[1]],
+    ap: [unit.ap[1], unit.ap[1]],
+  }));
 
   return {
     ...state,
     battle: {
       ...state.battle,
       turn: state.battle.turn + 1,
+      units,
     },
   };
 };
