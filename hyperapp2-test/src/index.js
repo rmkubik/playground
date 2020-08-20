@@ -52,6 +52,7 @@ app({
       selected: [],
       units: [],
       selectedAction: -1,
+      turn: 0,
     },
     moves,
   },

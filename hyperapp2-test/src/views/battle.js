@@ -216,6 +216,20 @@ const ClickTile = (state, location) => {
   }
 };
 
+const EndTurn = (state) => {
+  // perform enemy actions
+
+  // reset player units
+
+  return {
+    ...state,
+    battle: {
+      ...state.battle,
+      turn: state.battle.turn + 1,
+    },
+  };
+};
+
 const UnitInfo = ({
   unit: {
     name = "NONE SELECTED",
@@ -252,7 +266,7 @@ const UnitInfo = ({
 };
 
 const Battle = ({
-  battle: { tiles, selected, units, selectedAction },
+  battle: { tiles, selected, units, selectedAction, turn },
   moves,
 }) => {
   const selectedInfo =
@@ -331,7 +345,8 @@ const Battle = ({
             : {}
         }
       />
-      <button>End Turn</button>
+      <p>Turn: {turn + 1}</p>
+      <button onclick={EndTurn}>End Turn</button>
     </main>
   );
 };
