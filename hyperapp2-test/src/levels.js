@@ -16,6 +16,7 @@ const parse = (level) => {
             size: 4,
             abilities: ["hack"],
             moves: [2, 2],
+            ap: [1, 1],
             tiles: [[rowIndex, colIndex]],
           });
           break;
@@ -27,6 +28,7 @@ const parse = (level) => {
             size: 3,
             abilities: ["bash"],
             moves: [1, 1],
+            ap: [1, 1],
             tiles: [[rowIndex, colIndex]],
           });
           break;

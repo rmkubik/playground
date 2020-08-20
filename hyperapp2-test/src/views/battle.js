@@ -135,6 +135,11 @@ const UseAbility = (state, selectedUnitIndex, location) => {
   const ability =
     state.moves[selectedUnit.abilities[state.battle.selectedAction]];
 
+  if (selectedUnit.ap[0] === 0) {
+    // if we're out of ap, make no changes
+    return state;
+  }
+
   const targetUnitIndex = state.battle.units.findIndex((unit) =>
     isUnitAtLocation(unit, location)
   );
@@ -143,18 +148,36 @@ const UseAbility = (state, selectedUnitIndex, location) => {
     return state;
   }
 
+  const damagedEnemyUnit = updateArray(
+    state.battle.units,
+    targetUnitIndex,
+    (unit) => {
+      const tiles = unit.tiles.slice(0, unit.tiles.length - ability.power);
+
+      return {
+        ...unit,
+        tiles,
+      };
+    }
+  ).filter((unit) => unit.tiles.length > 0);
+
+  const apUpdatedState = updateArray(
+    damagedEnemyUnit,
+    selectedUnitIndex,
+    (unit) => {
+      return {
+        ...unit,
+        ap: [unit.ap[0] - 1, unit.ap[1]],
+      };
+    }
+  );
+
   return {
     ...state,
     battle: {
       ...state.battle,
-      units: updateArray(state.battle.units, targetUnitIndex, (unit) => {
-        const tiles = unit.tiles.slice(0, unit.tiles.length - ability.power);
-
-        return {
-          ...unit,
-          tiles,
-        };
-      }).filter((unit) => unit.tiles.length > 0),
+      units: apUpdatedState,
+      selectedAction: -1,
     },
   };
 };
@@ -198,6 +221,7 @@ const UnitInfo = ({
     name = "NONE SELECTED",
     icon = [0, 3],
     size = undefined,
+    ap = [],
     abilities = [],
     moves = [],
     tiles = [],
@@ -210,8 +234,9 @@ const UnitInfo = ({
     <div class="unit-info">
       <p>{header}</p>
       <Sprite sheet={tileSheet} icon={icon} scale={3} />
-      <p>{`Size: ${tiles.length || "?"}/${size || "?"}`}</p>
-      <p>{`Moves: ${moves[0] || "?"}/${moves[1] || "?"}`}</p>
+      <p>{`Size: ${tiles.length ?? "?"}/${size ?? "?"}`}</p>
+      <p>{`Moves: ${moves[0] ?? "?"}/${moves[1] ?? "?"}`}</p>
+      <p>{`Actions: ${ap[0] ?? "?"}/${ap[1] ?? "?"}`}</p>
       <HR />
       <ul>
         {abilities.map((ability, index) => (
