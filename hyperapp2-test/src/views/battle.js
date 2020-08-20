@@ -149,8 +149,19 @@ const UseAbility = (state, selectedUnitIndex, location) => {
     return state;
   }
 
-  const damagedEnemyUnit = updateArray(
+  const apUpdatedState = updateArray(
     state.battle.units,
+    selectedUnitIndex,
+    (unit) => {
+      return {
+        ...unit,
+        ap: [unit.ap[0] - 1, unit.ap[1]],
+      };
+    }
+  );
+
+  const damagedEnemyUnit = updateArray(
+    apUpdatedState,
     targetUnitIndex,
     (unit) => {
       const tiles = unit.tiles.slice(0, unit.tiles.length - ability.power);
@@ -162,22 +173,11 @@ const UseAbility = (state, selectedUnitIndex, location) => {
     }
   ).filter((unit) => unit.tiles.length > 0);
 
-  const apUpdatedState = updateArray(
-    damagedEnemyUnit,
-    selectedUnitIndex,
-    (unit) => {
-      return {
-        ...unit,
-        ap: [unit.ap[0] - 1, unit.ap[1]],
-      };
-    }
-  );
-
   return {
     ...state,
     battle: {
       ...state.battle,
-      units: apUpdatedState,
+      units: damagedEnemyUnit,
       selectedAction: -1,
     },
   };
@@ -185,6 +185,9 @@ const UseAbility = (state, selectedUnitIndex, location) => {
 
 const ClickTile = (state, location) => {
   const deselectedAbilityState = DeselectAbility(state);
+  const selectedUnitIndex = state.battle.units.findIndex((unit) =>
+    isUnitHeadAtLocation(unit, state.battle.selected)
+  );
 
   if (
     state.battle.selected[0] === location[0] &&
@@ -197,10 +200,6 @@ const ClickTile = (state, location) => {
     isLocationValidMoveTarget(state.battle, location)
   ) {
     // move action
-    const selectedUnitIndex = state.battle.units.findIndex((unit) =>
-      isUnitHeadAtLocation(unit, state.battle.selected)
-    );
-
     return MoveUnit(state, selectedUnitIndex, location);
   } else if (
     state.battle.selected.length === 2 &&
@@ -208,9 +207,6 @@ const ClickTile = (state, location) => {
     isLocationValidAttackTarget(state.battle, location)
   ) {
     // ability action
-    const selectedUnitIndex = state.battle.units.findIndex((unit) =>
-      isUnitHeadAtLocation(unit, state.battle.selected)
-    );
     return UseAbility(state, selectedUnitIndex, location);
   } else {
     return SelectUnit(deselectedAbilityState, location);
