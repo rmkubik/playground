@@ -251,11 +251,49 @@ const EndTurn = (state) => {
         isLocationValidMoveTarget(newState.battle, neighbor)
       );
 
+      const playerUnitTiles = newState.battle.units
+        .filter((unit) => unit.owner === 0)
+        .map((unit) => unit.tiles)
+        .reduce((allTiles, unitTiles) => [...allTiles, ...unitTiles], []);
+
+      console.log(playerUnitTiles);
+
+      const findNearestOption = (location, options) => {
+        let smallestDistance = Infinity;
+        let bestOption = [];
+
+        options.forEach((option) => {
+          const distance = manhattanDistance(location, option);
+
+          if (distance < smallestDistance) {
+            smallestDistance = distance;
+            bestOption = option;
+          }
+        });
+
+        return [smallestDistance, bestOption];
+      };
+
+      let smallestDistance = Infinity;
+      let bestMoveOption = [];
+
+      moveOptions.forEach((moveOption) => {
+        const [optionDistanceFromPlayer, nearestPlayerTile] = findNearestOption(
+          moveOption,
+          playerUnitTiles
+        );
+
+        if (optionDistanceFromPlayer < smallestDistance) {
+          smallestDistance = optionDistanceFromPlayer;
+          bestMoveOption = moveOption;
+        }
+      });
+
       if (moveOptions.length > 0) {
         newState = MoveUnit(
           newState,
           index,
-          pickRandomlyFromArray(moveOptions)
+          bestMoveOption // pickRandomlyFromArray(moveOptions)
         );
       }
 
