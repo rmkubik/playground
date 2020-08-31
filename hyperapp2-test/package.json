@@ -7,7 +7,7 @@
     "start": "parcel src/index.html",
     "build": "parcel build src/index.html",
     "compress": "rm -f build.zip && zip -r build.zip dist -x *.map dist/report.html && npm run showBundleSize",
-    "showBundleSize": "ls -lh build.zip | cut -d ' ' -f9"
+    "showBundleSize": "ls -lh build.zip | cut -d ' ' -f10"
   },
   "author": "",
   "license": "ISC",
