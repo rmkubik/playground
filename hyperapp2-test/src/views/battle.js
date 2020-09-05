@@ -8,6 +8,8 @@ import {
   updateArray,
   isUnitHeadAtLocation,
   isUnitAtLocation,
+  findUnitAtLocation,
+  findUnitIndexAtLocation,
   getNeighbors,
   findAllIndices,
   manhattanDistance,
@@ -121,6 +123,7 @@ const MoveUnit = (state, selectedUnitIndex, location) => {
         return {
           ...unit,
           moves: [unit.moves[0] - 1, unit.moves[1]],
+          animation: { type: "ADDED", state: "UNSTARTED" },
           tiles,
         };
       }),
@@ -167,19 +170,31 @@ const UseAbility = (state, selectedUnitIndex, location) => {
     apUpdatedState,
     targetUnitIndex,
     (unit) => {
-      const tiles = unit.tiles.slice(0, unit.tiles.length - ability.power);
+      // const tiles = unit.tiles.slice(0, unit.tiles.length - ability.power);
+      // const removedTiles = unit.tiles.slice(unit.tiles.length - ability.power);
 
       return {
         ...unit,
-        tiles,
+        animation: {
+          type: "REMOVED",
+          state: "UNSTARTED",
+          bg: unit.bg,
+          removedTiles: unit.tiles.slice(unit.tiles.length - ability.power),
+        },
+        // tiles,
       };
     }
-  ).filter((unit) => unit.tiles.length > 0);
+  ); // .filter(
+  //   (unit) => unit.tiles.length > 0 || unit.animation.state === "UNSTARTED"
+  // );
+
+  // console.log(damagedEnemyUnit);
 
   return {
     ...state,
     battle: {
       ...state.battle,
+      // prevUnits: deepClone(state.battle.units),
       units: damagedEnemyUnit,
       selectedAction: -1,
     },
@@ -219,6 +234,41 @@ const ClickTile = (state, location) => {
   }
 };
 
+const FinishAnimation = (state, location) => {
+  const unitIndex = findUnitIndexAtLocation(state.battle.units, location);
+
+  // if (unitIndex === -1)
+
+  return {
+    ...state,
+    battle: {
+      ...state.battle,
+      units: updateArray(state.battle.units, unitIndex, (unit) => {
+        const isLocationRemoved = unit.animation.removedTiles?.some(
+          (removed) => removed[0] === location[0] && removed[1] === location[1]
+        );
+
+        const removedLocationIndex = unit.tiles.findIndex(
+          (tile) => tile[0] === location[0] && tile[1] === location[1]
+        );
+        const tiles =
+          unit.animation.type === "REMOVED" && isLocationRemoved
+            ? [
+                ...unit.tiles.slice(0, removedLocationIndex),
+                ...unit.tiles.slice(removedLocationIndex + 1),
+              ] // unit.tiles.slice(0, unit.tiles.length - unit.animation.amount)
+            : unit.tiles;
+
+        return {
+          ...unit,
+          tiles: tiles.length > 0 ? tiles : [[]],
+          animation: { ...unit.animation, state: "COMPLETED" },
+        };
+      }),
+    },
+  };
+};
+
 const EndTurn = (state) => {
   // perform enemy actions
   const isNotActedEnemyUnit = (unit) => !unit.acted && unit.owner !== 0;
@@ -255,8 +305,6 @@ const EndTurn = (state) => {
         .filter((unit) => unit.owner === 0)
         .map((unit) => unit.tiles)
         .reduce((allTiles, unitTiles) => [...allTiles, ...unitTiles], []);
-
-      console.log(playerUnitTiles);
 
       const findNearestOption = (location, options) => {
         let smallestDistance = Infinity;
@@ -322,17 +370,11 @@ const EndTurn = (state) => {
             ).owner === 0
         );
 
-      console.log(
-        deepClone(newState.battle.units[index].tiles[0]),
-        deepClone(newState),
-        deepClone(attackOptions)
-      );
-
       if (attackOptions.length > 0) {
-        console.log(
-          newState.battle.selected,
-          newState.battle.units[index].tiles[0]
-        );
+        // console.log(
+        //   newState.battle.selected,
+        //   newState.battle.units[index].tiles[0]
+        // );
         newState = UseAbility(
           newState,
           index,
@@ -433,6 +475,32 @@ const Battle = ({
                 [rowIndex, colIndex]
               );
 
+              // is there a unit on this tile?
+              // const unit = findUnitAtLocation(units, [rowIndex, colIndex]);
+              // const prevUnit = findUnitAtLocation(prevUnits, [
+              //   rowIndex,
+              //   colIndex,
+              // ]);
+
+              // let newlyMoved = false;
+              // let newlyRemoved = false;
+
+              // if (unit && unit.owner !== -1 && prevUnit === undefined) {
+              //   newlyMoved = true;
+              // }
+
+              // if (!unit && prevUnit && prevUnit.owner !== -1) {
+              //   newlyRemoved = true;
+              // }
+
+              // const unit = findUnitAtLocation(units, [rowIndex, colIndex]);
+              // const newlyMoved =
+              //   unit?.animation.type === "ADDED" &&
+              //   unit?.animation.state === "UNSTARTED";
+              // const newlyRemoved =
+              //   unit?.animation.type === "REMOVED" &&
+              //   unit?.animation.state === "UNSTARTED";
+
               const unitHead = units.find((unit) =>
                 isUnitHeadAtLocation(unit, [rowIndex, colIndex])
               );
@@ -462,6 +530,7 @@ const Battle = ({
             })
           )}
           onTileClick={ClickTile}
+          onAnimationEnd={FinishAnimation}
           selected={selected}
         />
       </div>

@@ -15,16 +15,27 @@ const Sprite = ({
   moveTarget,
   attackTarget,
   neighbors = [],
+  animation = {},
+  onanimationend,
 }) => {
   return (
     <div
       class={`sprite${selected ? " selected" : ""}${
         moveTarget ? " move-target" : ""
-      }${attackTarget ? " attack-target" : ""}`}
+      }${attackTarget ? " attack-target" : ""}${
+        animation.state === "UNSTARTED"
+          ? ` animated ${
+              animation.type === "ADDED" ? "scale-in" : "scale-out"
+            } fast`
+          : ""
+      }`}
       style={{
         width: `${TILE_SIZE * scale}px`,
         height: `${TILE_SIZE * scale}px`,
-        backgroundColor: bg,
+        backgroundColor:
+          animation.state === "UNSTARTED" && animation.type === "REMOVED"
+            ? animation.bg
+            : bg,
         borderTop:
           neighbors.some((neighbor) => neighbor[0] === -1) &&
           !selected &&
@@ -55,6 +66,7 @@ const Sprite = ({
             : "",
       }}
       onclick={onclick}
+      onanimationend={onanimationend}
     >
       {row !== undefined && (
         <div
@@ -119,7 +131,7 @@ const Server = ({ sheet, icon, label, statusCode, onclick }) => {
   );
 };
 
-const Grid = ({ sheet, tiles, onTileClick, selected }) => {
+const Grid = ({ sheet, tiles, onTileClick, onAnimationEnd, selected }) => {
   const scale = 3;
   return (
     <div
@@ -134,21 +146,39 @@ const Grid = ({ sheet, tiles, onTileClick, selected }) => {
     >
       {[].concat(
         ...tiles.map((row, rowIndex) =>
-          row.map((tile, colIndex) => (
-            <Sprite
-              onclick={(state) => onTileClick(state, [rowIndex, colIndex])}
-              sheet={sheet}
-              scale={scale}
-              selected={selected[0] === rowIndex && selected[1] === colIndex}
-              neighbors={getNeighborLocations(tiles, [rowIndex, colIndex])
-                .filter((neighbor) => isUnitAtLocation(tile, neighbor))
-                .map((location) => [
-                  location[0] - rowIndex,
-                  location[1] - colIndex,
-                ])}
-              {...tile}
-            />
-          ))
+          row.map((tile, colIndex) => {
+            let animation = tile.animation;
+
+            if (tile.animation?.type === "REMOVED") {
+              // only remove tile if it's in removed
+              const isLocationRemoved = tile.animation.removedTiles.some(
+                (removed) => removed[0] === rowIndex && removed[1] === colIndex
+              );
+              if (!isLocationRemoved) {
+                animation = {};
+              }
+            }
+
+            return (
+              <Sprite
+                onclick={(state) => onTileClick(state, [rowIndex, colIndex])}
+                onanimationend={(state) =>
+                  onAnimationEnd(state, [rowIndex, colIndex])
+                }
+                sheet={sheet}
+                scale={scale}
+                selected={selected[0] === rowIndex && selected[1] === colIndex}
+                neighbors={getNeighborLocations(tiles, [rowIndex, colIndex])
+                  .filter((neighbor) => isUnitAtLocation(tile, neighbor))
+                  .map((location) => [
+                    location[0] - rowIndex,
+                    location[1] - colIndex,
+                  ])}
+                {...tile}
+                animation={animation}
+              />
+            );
+          })
         )
       )}
     </div>

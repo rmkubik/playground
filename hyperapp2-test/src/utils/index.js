@@ -12,6 +12,12 @@ const isUnitHeadAtLocation = (unit, [row, col]) =>
 const isUnitAtLocation = (unit, [row, col]) =>
   unit.tiles.some((tile) => tile[0] === row && tile[1] === col);
 
+const findUnitAtLocation = (units, location) =>
+  units.find((unit) => isUnitAtLocation(unit, location));
+
+const findUnitIndexAtLocation = (units, location) =>
+  units.findIndex((unit) => isUnitAtLocation(unit, location));
+
 const isLocationInBounds = (tiles, location) =>
   location[0] >= 0 &&
   location[1] >= 0 &&
@@ -54,6 +60,8 @@ export {
   updateArray,
   isUnitHeadAtLocation,
   isUnitAtLocation,
+  findUnitAtLocation,
+  findUnitIndexAtLocation,
   isLocationInBounds,
   getNeighbors,
   getNeighborLocations,

@@ -19,6 +19,7 @@ const parse = (level) => {
             ap: [1, 1],
             owner: 0,
             tiles: [[rowIndex, colIndex]],
+            animation: {},
           });
           break;
         case "x":
@@ -32,6 +33,7 @@ const parse = (level) => {
             ap: [1, 1],
             owner: 1,
             tiles: [[rowIndex, colIndex]],
+            animation: {},
           });
           break;
         default:
