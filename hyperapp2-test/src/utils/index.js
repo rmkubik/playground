@@ -35,6 +35,83 @@ const getNeighborLocations = (tiles, location) => {
 
 const getNeighbors = getNeighborLocations;
 
+// get array of locations in diamond around location where radius of diamond === magnitude
+const getLocationsInArea = (tiles, location, magnitude) => {
+  const locations = [];
+
+  for (let m = 1; m <= magnitude; m++) {
+    locations.push(
+      [location[0] - m, location[1]],
+      [location[0] + m, location[1]],
+      [location[0], location[1] - m],
+      [location[0], location[1] + m]
+    );
+  }
+
+  return locations.filter((inAreaLocation) =>
+    isLocationInBounds(tiles, inAreaLocation)
+  );
+};
+
+const getLocationsInDiamond = (tiles, location, magnitude) => {
+  const locations = [];
+
+  // get a triangle from top to bottom
+  // then stack another triangle upsidedown underneath it
+  // height of each triangle === magnitude
+
+  // triangle starts magnitude rows above our location
+  const trianglePeak = -magnitude;
+
+  for (let depth = 0; depth <= magnitude; depth++) {
+    // top of diamond
+    locations.push([location[0] + (-magnitude + depth), location[1]]);
+    // bottom of diamond
+    locations.push([location[0] + (magnitude - depth), location[1]]);
+
+    if (depth === 0) {
+      // only add additional columns after the peak
+      continue;
+    }
+
+    for (let layerWidth = 1; layerWidth <= depth; layerWidth++) {
+      // top rows of diamond
+      locations.push(
+        [location[0] + (-magnitude + depth), location[1] + layerWidth],
+        [location[0] + (-magnitude + depth), location[1] - layerWidth]
+      );
+      //bottom rows of diamond
+      locations.push(
+        [location[0] + (magnitude - depth), location[1] + layerWidth],
+        [location[0] + (magnitude - depth), location[1] - layerWidth]
+      );
+    }
+  }
+
+  return locations.filter((inAreaLocation) =>
+    isLocationInBounds(tiles, inAreaLocation)
+  );
+};
+
+const getLocationsInSquare = (tiles, location, magnitude) => {
+  const locations = [];
+
+  for (let rowAdjust = 0; rowAdjust <= magnitude; rowAdjust++) {
+    for (let colAdjust = 0; colAdjust <= magnitude; colAdjust++) {
+      locations.push(
+        [location[0] - rowAdjust, location[1] + colAdjust],
+        [location[0] + rowAdjust, location[1] + colAdjust],
+        [location[0] + rowAdjust, location[1] - colAdjust],
+        [location[0] - rowAdjust, location[1] - colAdjust]
+      );
+    }
+  }
+
+  return locations.filter((inAreaLocation) =>
+    isLocationInBounds(tiles, inAreaLocation)
+  );
+};
+
 function findAllIndices(array, comparator) {
   const indices = [];
 
@@ -68,4 +145,7 @@ export {
   findAllIndices,
   manhattanDistance,
   pickRandomlyFromArray,
+  getLocationsInArea,
+  getLocationsInDiamond,
+  getLocationsInSquare,
 };

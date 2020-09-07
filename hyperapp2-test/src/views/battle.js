@@ -14,6 +14,9 @@ import {
   findAllIndices,
   manhattanDistance,
   pickRandomlyFromArray,
+  getLocationsInArea,
+  getLocationsInDiamond,
+  getLocationsInSquare,
 } from "../utils";
 
 const SelectAbility = (state, index) => {
@@ -88,17 +91,50 @@ const isLocationValidMoveTarget = (
 
 const isLocationValidAttackTarget = (
   { units, tiles, selected, selectedAction },
-  location
+  location,
+  moves
 ) => {
-  const neighbors = getNeighbors(tiles, location);
+  if (selectedAction === -1) {
+    return false;
+  }
+
+  const selectedUnit = findUnitAtLocation(units, selected);
+  const abilityKey = selectedUnit.abilities[selectedAction];
+  const ability = moves[abilityKey];
+
+  let inRangeLocations = [];
+
+  // Use switch(true) as a pattern matcher
+  //
+  switch (true) {
+    case ability.area.includes("cross"):
+      {
+        const range = parseInt(ability.area.match(/cross(\d+)/)[1]);
+        inRangeLocations = getLocationsInArea(tiles, location, range);
+      }
+      break;
+    case ability.area.includes("diamond"):
+      {
+        const range = parseInt(ability.area.match(/diamond(\d+)/)[1]);
+        inRangeLocations = getLocationsInDiamond(tiles, location, range);
+      }
+      break;
+    case ability.area.includes("square"):
+      {
+        const range = parseInt(ability.area.match(/square(\d+)/)[1]);
+        inRangeLocations = getLocationsInSquare(tiles, location, range);
+      }
+      break;
+    default:
+      break;
+  }
+
   // is neighboring tile selected and a unit's head
-  return (
-    neighbors.some(
-      (neighbor) =>
-        selected[0] === neighbor[0] &&
-        selected[1] === neighbor[1] && // is selected tile a neighbor of this one
-        units.some((unit) => isUnitHeadAtLocation(unit, selected)) // is the selected tile a unit head
-    ) && selectedAction !== -1
+  return inRangeLocations.some(
+    (inRangeLocation) =>
+      selected[0] === inRangeLocation[0] &&
+      selected[1] === inRangeLocation[1] && // is selected tile in range of this one
+      units.some((unit) => isUnitHeadAtLocation(unit, selected)) // is the selected tile a unit head
   );
 };
 
@@ -460,7 +496,8 @@ const Battle = ({
               );
               const attackTarget = isLocationValidAttackTarget(
                 { tiles, selected, units, selectedAction },
-                [rowIndex, colIndex]
+                [rowIndex, colIndex],
+                moves
               );
 
               const unitHead = units.find((unit) =>
