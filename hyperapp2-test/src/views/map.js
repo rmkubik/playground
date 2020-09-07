@@ -3,21 +3,15 @@ import h from "../hyperapp-jsx";
 import tileSheet from "../../assets/tiles.png";
 
 import { Server } from "../components";
-import { deepClone } from "../utils";
 
-const StartBattle = (state, index) => {
+const StartConnection = (state, index) => {
   return {
     ...state,
-    map: {
-      ...state.map,
-      selected: index,
+    connection: {
+      ...state.connection,
+      battleIndex: index,
     },
-    battle: {
-      ...state.battle,
-      tiles: deepClone(state.map.servers[index].tiles),
-      units: deepClone(state.map.servers[index].units),
-    },
-    view: "battle",
+    view: "connection",
   };
 };
 
@@ -32,10 +26,11 @@ const Map = ({ map: { servers } }) => {
             icon={server.icon}
             label={server.name}
             statusCode={server.statusCode}
-            onclick={(state) => StartBattle(state, index)}
+            onclick={(state) => StartConnection(state, index)}
           />
         ))}
       </div>
+      <p>Click a server to attempt to establish a connection...</p>
     </main>
   );
 };

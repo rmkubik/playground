@@ -68,6 +68,9 @@ app({
     intro: {
       step: 0,
     },
+    connection: {
+      step: 0,
+    },
     moves,
   },
   view: App,
