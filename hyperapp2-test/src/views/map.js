@@ -9,7 +9,7 @@ const StartConnection = (state, index) => {
     ...state,
     connection: {
       ...state.connection,
-      battleIndex: index,
+      serverIndex: index,
     },
     view: "connection",
   };
