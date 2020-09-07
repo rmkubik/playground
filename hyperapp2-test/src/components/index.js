@@ -158,6 +158,15 @@ const Grid = ({ sheet, tiles, onTileClick, onAnimationEnd, selected }) => {
                 animation = {};
               }
             }
+            if (tile.animation?.type === "ADDED") {
+              // only move tile if it's in moved
+              const isLocationMoved = tile.animation.movedTiles.some(
+                (moved) => moved[0] === rowIndex && moved[1] === colIndex
+              );
+              if (!isLocationMoved) {
+                animation = {};
+              }
+            }
 
             return (
               <Sprite

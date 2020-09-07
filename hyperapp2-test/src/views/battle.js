@@ -98,7 +98,6 @@ const isLocationValidAttackTarget = (
         selected[0] === neighbor[0] &&
         selected[1] === neighbor[1] && // is selected tile a neighbor of this one
         units.some((unit) => isUnitHeadAtLocation(unit, selected)) // is the selected tile a unit head
-      // && units.some((unit) => isUnitAtLocation(unit, selected)) // is the selected tile an enemy unit
     ) && selectedAction !== -1
   );
 };
@@ -123,7 +122,11 @@ const MoveUnit = (state, selectedUnitIndex, location) => {
         return {
           ...unit,
           moves: [unit.moves[0] - 1, unit.moves[1]],
-          animation: { type: "ADDED", state: "UNSTARTED" },
+          animation: {
+            type: "ADDED",
+            state: "UNSTARTED",
+            movedTiles: [location],
+          },
           tiles,
         };
       }),
@@ -170,9 +173,6 @@ const UseAbility = (state, selectedUnitIndex, location) => {
     apUpdatedState,
     targetUnitIndex,
     (unit) => {
-      // const tiles = unit.tiles.slice(0, unit.tiles.length - ability.power);
-      // const removedTiles = unit.tiles.slice(unit.tiles.length - ability.power);
-
       return {
         ...unit,
         animation: {
@@ -181,20 +181,14 @@ const UseAbility = (state, selectedUnitIndex, location) => {
           bg: unit.bg,
           removedTiles: unit.tiles.slice(unit.tiles.length - ability.power),
         },
-        // tiles,
       };
     }
-  ); // .filter(
-  //   (unit) => unit.tiles.length > 0 || unit.animation.state === "UNSTARTED"
-  // );
-
-  // console.log(damagedEnemyUnit);
+  );
 
   return {
     ...state,
     battle: {
       ...state.battle,
-      // prevUnits: deepClone(state.battle.units),
       units: damagedEnemyUnit,
       selectedAction: -1,
     },
@@ -236,8 +230,6 @@ const ClickTile = (state, location) => {
 
 const FinishAnimation = (state, location) => {
   const unitIndex = findUnitIndexAtLocation(state.battle.units, location);
-
-  // if (unitIndex === -1)
 
   return {
     ...state,
@@ -371,10 +363,6 @@ const EndTurn = (state) => {
         );
 
       if (attackOptions.length > 0) {
-        // console.log(
-        //   newState.battle.selected,
-        //   newState.battle.units[index].tiles[0]
-        // );
         newState = UseAbility(
           newState,
           index,
@@ -474,32 +462,6 @@ const Battle = ({
                 { tiles, selected, units, selectedAction },
                 [rowIndex, colIndex]
               );
-
-              // is there a unit on this tile?
-              // const unit = findUnitAtLocation(units, [rowIndex, colIndex]);
-              // const prevUnit = findUnitAtLocation(prevUnits, [
-              //   rowIndex,
-              //   colIndex,
-              // ]);
-
-              // let newlyMoved = false;
-              // let newlyRemoved = false;
-
-              // if (unit && unit.owner !== -1 && prevUnit === undefined) {
-              //   newlyMoved = true;
-              // }
-
-              // if (!unit && prevUnit && prevUnit.owner !== -1) {
-              //   newlyRemoved = true;
-              // }
-
-              // const unit = findUnitAtLocation(units, [rowIndex, colIndex]);
-              // const newlyMoved =
-              //   unit?.animation.type === "ADDED" &&
-              //   unit?.animation.state === "UNSTARTED";
-              // const newlyRemoved =
-              //   unit?.animation.type === "REMOVED" &&
-              //   unit?.animation.state === "UNSTARTED";
 
               const unitHead = units.find((unit) =>
                 isUnitHeadAtLocation(unit, [rowIndex, colIndex])
