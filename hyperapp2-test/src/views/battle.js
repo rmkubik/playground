@@ -254,7 +254,7 @@ const ClickTile = (state, location) => {
   } else if (
     state.battle.selected.length === 2 &&
     state.battle.selectedAction !== -1 &&
-    isLocationValidAttackTarget(state.battle, location) &&
+    isLocationValidAttackTarget(state.battle, location, state.moves) &&
     selectedUnit.owner === 0 // only let player use action of own units
   ) {
     // ability action
@@ -385,7 +385,7 @@ const EndTurn = (state) => {
         )
         .filter((neighbor) =>
           // this may already be validated in our scenario
-          isLocationValidAttackTarget(newState.battle, neighbor)
+          isLocationValidAttackTarget(newState.battle, neighbor, newState.moves)
         )
         // filter out non-player unis to prevent firendly AI fire
         // check if any option is contained in a the tiles of a non-player unit
