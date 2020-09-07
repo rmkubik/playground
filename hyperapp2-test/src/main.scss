@@ -27,7 +27,7 @@ p {
 }
 
 @keyframes flash {
-  from,
+  to,
   30% {
     opacity: 1;
   }
@@ -221,4 +221,23 @@ p {
   .selected {
     background-color: $selected-color;
   }
+}
+
+main {
+  max-width: 80ch;
+}
+
+@keyframes slideInDown {
+  from {
+    transform: translate3d(0, -100%, 0);
+    visibility: visible;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.slideInDown {
+  animation-name: slideInDown;
 }

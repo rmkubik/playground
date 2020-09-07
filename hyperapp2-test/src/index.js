@@ -29,19 +29,26 @@ const Click = (state, event) => {
   if (state.view === "main") {
     return {
       ...state,
+      view: "intro",
+    };
+  }
+
+  if (state.view === "intro") {
+    return {
+      ...state,
       view: "map",
     };
   }
 };
 
 const App = (state) => {
-  const { view = "main", map, battle, moves } = state;
+  const { view = "main", ...rest } = state;
 
   console.log(state);
 
   const CurrentView = views[view];
 
-  return <CurrentView map={map} battle={battle} moves={moves} />;
+  return <CurrentView {...rest} />;
 };
 
 app({
@@ -58,12 +65,15 @@ app({
       selectedAction: -1,
       turn: 0,
     },
+    intro: {
+      step: 0,
+    },
     moves,
   },
   view: App,
   node: document.getElementById("app"),
   subscriptions: (state) => [
-    state.view === "main" && onClick(Click),
-    state.view === "main" && onKeyDown(Click),
+    (state.view === "main" || state.view === "intro") && onClick(Click),
+    (state.view === "main" || state.view === "intro") && onKeyDown(Click),
   ],
 });
