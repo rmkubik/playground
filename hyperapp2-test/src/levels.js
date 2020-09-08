@@ -8,7 +8,7 @@ const parse = (level) => {
   const tiles = lines.slice(2).map((row, rowIndex) =>
     row.split(" ").map((char, colIndex) => {
       switch (char) {
-        case "s":
+        case "h":
           units.push({
             icon: [0, 1],
             bg: "#5454ff",
@@ -46,6 +46,48 @@ const parse = (level) => {
             moves: [3, 3],
             ap: [1, 1],
             owner: 1,
+            tiles: [[rowIndex, colIndex]],
+            animation: {},
+          });
+          break;
+        case "t":
+          units.push({
+            icon: [1, 0],
+            bg: "#ff5454",
+            name: "TRASH",
+            size: 3,
+            abilities: ["empty"],
+            moves: [2, 2],
+            ap: [1, 1],
+            owner: 1,
+            tiles: [[rowIndex, colIndex]],
+            animation: {},
+          });
+          break;
+        case "p":
+          units.push({
+            icon: [0, 9],
+            bg: "#5454ff",
+            name: "PING",
+            size: 3,
+            abilities: ["ping"],
+            moves: [1, 1],
+            ap: [1, 1],
+            owner: 0,
+            tiles: [[rowIndex, colIndex]],
+            animation: {},
+          });
+          break;
+        case "s":
+          units.push({
+            icon: [1, 4],
+            bg: "#5454ff",
+            name: "SLING",
+            size: 3,
+            abilities: ["sling"],
+            moves: [1, 1],
+            ap: [1, 1],
+            owner: 0,
             tiles: [[rowIndex, colIndex]],
             animation: {},
           });
