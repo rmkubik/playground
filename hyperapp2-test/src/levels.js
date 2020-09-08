@@ -36,6 +36,20 @@ const parse = (level) => {
             animation: {},
           });
           break;
+        case "f":
+          units.push({
+            icon: [0, 6],
+            bg: "#ff5454",
+            name: "FIREWALL",
+            size: 10,
+            abilities: ["bash"],
+            moves: [3, 3],
+            ap: [1, 1],
+            owner: 1,
+            tiles: [[rowIndex, colIndex]],
+            animation: {},
+          });
+          break;
         default:
           break;
       }

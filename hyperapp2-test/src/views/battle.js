@@ -322,55 +322,66 @@ const EndTurn = (state) => {
       // recurse until moves are 0
       // is neighboring player unit?
       // use ability on player unit
-      newState = SelectUnit(newState, unit.tiles[0]);
 
-      let neighbors = getNeighbors(newState.battle.tiles, unit.tiles[0]);
-      const moveOptions = neighbors.filter((neighbor) =>
-        isLocationValidMoveTarget(newState.battle, neighbor)
-      );
+      let neighbors;
 
-      const playerUnitTiles = newState.battle.units
-        .filter((unit) => unit.owner === 0)
-        .map((unit) => unit.tiles)
-        .reduce((allTiles, unitTiles) => [...allTiles, ...unitTiles], []);
+      while (newState.battle.units[index].moves[0] > 0) {
+        newState = SelectUnit(newState, newState.battle.units[index].tiles[0]);
 
-      const findNearestOption = (location, options) => {
+        neighbors = getNeighbors(
+          newState.battle.tiles,
+          newState.battle.units[index].tiles[0]
+        );
+
+        const moveOptions = neighbors.filter((neighbor) =>
+          isLocationValidMoveTarget(newState.battle, neighbor)
+        );
+
+        const playerUnitTiles = newState.battle.units
+          .filter((unit) => unit.owner === 0)
+          .map((unit) => unit.tiles)
+          .reduce((allTiles, unitTiles) => [...allTiles, ...unitTiles], []);
+
+        const findNearestOption = (location, options) => {
+          let smallestDistance = Infinity;
+          let bestOption = [];
+
+          options.forEach((option) => {
+            const distance = manhattanDistance(location, option);
+
+            if (distance < smallestDistance) {
+              smallestDistance = distance;
+              bestOption = option;
+            }
+          });
+
+          return [smallestDistance, bestOption];
+        };
+
         let smallestDistance = Infinity;
-        let bestOption = [];
+        let bestMoveOption = [];
 
-        options.forEach((option) => {
-          const distance = manhattanDistance(location, option);
+        moveOptions.forEach((moveOption) => {
+          const [
+            optionDistanceFromPlayer,
+            nearestPlayerTile,
+          ] = findNearestOption(moveOption, playerUnitTiles);
 
-          if (distance < smallestDistance) {
-            smallestDistance = distance;
-            bestOption = option;
+          if (optionDistanceFromPlayer < smallestDistance) {
+            smallestDistance = optionDistanceFromPlayer;
+            bestMoveOption = moveOption;
           }
         });
 
-        return [smallestDistance, bestOption];
-      };
-
-      let smallestDistance = Infinity;
-      let bestMoveOption = [];
-
-      moveOptions.forEach((moveOption) => {
-        const [optionDistanceFromPlayer, nearestPlayerTile] = findNearestOption(
-          moveOption,
-          playerUnitTiles
-        );
-
-        if (optionDistanceFromPlayer < smallestDistance) {
-          smallestDistance = optionDistanceFromPlayer;
-          bestMoveOption = moveOption;
+        if (moveOptions.length > 0) {
+          newState = MoveUnit(
+            newState,
+            index,
+            bestMoveOption // pickRandomlyFromArray(moveOptions)
+          );
+        } else {
+          break;
         }
-      });
-
-      if (moveOptions.length > 0) {
-        newState = MoveUnit(
-          newState,
-          index,
-          bestMoveOption // pickRandomlyFromArray(moveOptions)
-        );
       }
 
       // hard code to always pick first AI ability
