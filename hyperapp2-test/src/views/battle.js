@@ -298,6 +298,30 @@ const FinishAnimation = (state, location) => {
 };
 
 const EndTurn = (state) => {
+  // is every unit either player owned OR is dead ( this is what empty program looks like: [[]] )
+  if (
+    state.battle.units.every(
+      (unit) => unit.owner === 0 || unit.tiles[0].length === 0
+    )
+  ) {
+    // mark server as complete, and return to map
+    return {
+      ...state,
+      view: "map",
+      map: {
+        ...state.map,
+        servers: updateArray(
+          state.map.servers,
+          state.map.selected,
+          (server) => ({
+            ...server,
+            statusCode: 200,
+          })
+        ),
+      },
+    };
+  }
+
   // perform enemy actions
   const isNotActedEnemyUnit = (unit) => !unit.acted && unit.owner !== 0;
 
@@ -421,6 +445,19 @@ const EndTurn = (state) => {
       newState = DeselectUnit(newState);
     }
   });
+
+  // if all player units are dead, declare defeat
+  if (
+    state.battle.units.every(
+      (unit) => unit.owner !== 0 || unit.tiles[0].length === 0
+    )
+  ) {
+    // mark server as complete, and return to map
+    return {
+      ...state,
+      view: "map",
+    };
+  }
 
   // reset units
   const units = newState.battle.units.map((unit) => ({

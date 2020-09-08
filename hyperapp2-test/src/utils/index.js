@@ -60,9 +60,6 @@ const getLocationsInDiamond = (tiles, location, magnitude) => {
   // then stack another triangle upsidedown underneath it
   // height of each triangle === magnitude
 
-  // triangle starts magnitude rows above our location
-  const trianglePeak = -magnitude;
-
   for (let depth = 0; depth <= magnitude; depth++) {
     // top of diamond
     locations.push([location[0] + (-magnitude + depth), location[1]]);
