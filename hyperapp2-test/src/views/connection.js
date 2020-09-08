@@ -5,6 +5,10 @@ import { deepClone } from "../utils";
 const StartBattle = (state, index) => {
   return {
     ...state,
+    connection: {
+      ...state.connection,
+      step: 0,
+    },
     map: {
       ...state.map,
       selected: index,

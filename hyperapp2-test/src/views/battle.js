@@ -596,6 +596,29 @@ const Battle = ({
       />
       <p>Turn: {turn + 1}</p>
       <button onclick={EndTurn}>End Turn</button>
+      {units.every((unit) => unit.owner !== 0 || unit.tiles[0].length === 0) ? (
+        // if defeat is true
+        <p>
+          <span style={{ color: "red" }}>Connection attempt FAILED!</span> This
+          server is still <span style={{ color: "red" }}>404 Not Found</span>.
+          Try hacking again to retry hack battle.
+        </p>
+      ) : units.every(
+          (unit) => unit.owner === 0 || unit.tiles[0].length === 0
+        ) ? (
+        // if success is true
+        <p>
+          <span style={{ color: "green" }}>Connection attempt SUCCEEDED!</span>{" "}
+          This server is now <span style={{ color: "green" }}>200 OK</span>.
+          Connection to The Cloud has been re-established.
+        </p>
+      ) : (
+        // default text
+        <p>
+          Destroy the enemy programs to re-establish connection between this
+          server and The Cloud.
+        </p>
+      )}
     </main>
   );
 };
