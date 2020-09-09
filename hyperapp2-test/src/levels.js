@@ -1,5 +1,6 @@
 import level1 from "../assets/level1.txt";
 import level2 from "../assets/level2.txt";
+import level3 from "../assets/level3.txt";
 
 const parse = (level) => {
   const lines = level.split("\n");
@@ -106,6 +107,20 @@ const parse = (level) => {
             animation: {},
           });
           break;
+        case "d":
+          units.push({
+            icon: [1, 7],
+            bg: "#ff5454",
+            name: "DUD",
+            size: 1,
+            abilities: ["sputter"],
+            moves: [0, 0],
+            ap: [1, 1],
+            owner: 1,
+            tiles: [[rowIndex, colIndex]],
+            animation: {},
+          });
+          break;
         default:
           break;
       }
@@ -122,4 +137,4 @@ const parse = (level) => {
   };
 };
 
-export default [parse(level1), parse(level2)];
+export default [parse(level3), parse(level1), parse(level2)];

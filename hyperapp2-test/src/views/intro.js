@@ -3,8 +3,11 @@ import h from "../hyperapp-jsx";
 const AdvanceStep = (state, event, finalStep) => {
   const step = state.intro.step + 1;
 
-  if (step !== finalStep) {
-    event.stopPropagation();
+  if (step === finalStep) {
+    return {
+      ...state,
+      view: "map",
+    };
   }
 
   return {

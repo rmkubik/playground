@@ -32,13 +32,6 @@ const Click = (state, event) => {
       view: "intro",
     };
   }
-
-  if (state.view === "intro") {
-    return {
-      ...state,
-      view: "map",
-    };
-  }
 };
 
 const App = (state) => {
@@ -76,7 +69,7 @@ app({
   view: App,
   node: document.getElementById("app"),
   subscriptions: (state) => [
-    (state.view === "main" || state.view === "intro") && onClick(Click),
-    (state.view === "main" || state.view === "intro") && onKeyDown(Click),
+    state.view === "main" && onClick(Click),
+    state.view === "main" && onKeyDown(Click),
   ],
 });
