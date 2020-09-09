@@ -17,6 +17,7 @@ import {
   getLocationsInArea,
   getLocationsInDiamond,
   getLocationsInSquare,
+  getAllLocations,
 } from "../utils";
 
 const SelectAbility = (state, index) => {
@@ -348,6 +349,7 @@ const EndTurn = (state) => {
       // use ability on player unit
 
       let neighbors;
+      newState = SelectUnit(newState, newState.battle.units[index].tiles[0]);
 
       while (newState.battle.units[index].moves[0] > 0) {
         newState = SelectUnit(newState, newState.battle.units[index].tiles[0]);
@@ -411,9 +413,7 @@ const EndTurn = (state) => {
       // hard code to always pick first AI ability
       newState = SelectAbility(newState, 0);
 
-      const selectedUnit = newState.battle.units[index];
-      neighbors = getNeighbors(newState.battle.tiles, selectedUnit.tiles[0]);
-      const attackOptions = neighbors
+      const attackOptions = getAllLocations(newState.battle.tiles)
         .filter((neighbor) =>
           // filter out any neighbors without units on them
           newState.battle.units.some((unit) => isUnitAtLocation(unit, neighbor))

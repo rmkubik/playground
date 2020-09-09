@@ -129,6 +129,18 @@ function pickRandomlyFromArray(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
+function getAllLocations(tiles) {
+  const locations = [];
+
+  tiles.forEach((row, rowIndex) =>
+    row.forEach((col, colIndex) => {
+      locations.push([rowIndex, colIndex]);
+    })
+  );
+
+  return locations;
+}
+
 export {
   deepClone,
   updateArray,
@@ -145,4 +157,5 @@ export {
   getLocationsInArea,
   getLocationsInDiamond,
   getLocationsInSquare,
+  getAllLocations,
 };

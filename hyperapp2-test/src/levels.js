@@ -92,6 +92,20 @@ const parse = (level) => {
             animation: {},
           });
           break;
+        case "e":
+          units.push({
+            icon: [1, 6],
+            bg: "#ff5454",
+            name: "SENTRY",
+            size: 1,
+            abilities: ["peek"],
+            moves: [0, 0],
+            ap: [1, 1],
+            owner: 1,
+            tiles: [[rowIndex, colIndex]],
+            animation: {},
+          });
+          break;
         default:
           break;
       }
